@@ -34,7 +34,7 @@ package as3spec
 			{
 				if (requirements.length < 1) status = 'MISSING';
 				if (status != '') status = ' [' + status + ']';
-				trace('- ' + story + status);
+				trace('- it ' + story + status);
 			}
 			
 		}
