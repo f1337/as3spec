@@ -29,7 +29,7 @@ package as3spec
 
 		private function do_describe (...args) :void
 		{
-			super.describe(this.context, this.block);
+			super.describe(this.context.className, this.block);
 		}
 	}
 }

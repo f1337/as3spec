@@ -9,8 +9,16 @@ package as3spec
 		private var context:Context;
 
 		// context
+/*		public function describe (story:String, context:*, block:Function) :void*/
 		public function describe (context:*, block:Function) :void
+/*		public function describe (story:String, block:Function) :void*/
+/*		public function describe (...args) :void*/
 		{
+/*			if (args.length < 2) throw('invalid arguments for describe()');
+
+			var block:Function = args.pop();
+			var story:String = args.join(' ');
+*/
 			this.context = new Context(context);
 			this.context.describe(block);
 			System.exit(0);
