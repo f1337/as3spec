@@ -1,0 +1,60 @@
+Example:
+
+package
+{
+	import as3spec.*;
+
+	public class SomeSpec extends Spec
+	{
+		private var arr:Array = new Array;
+
+		public function SomeSpec ()
+		{
+			describe ('as3spec', function () :void
+			{
+				it ('should provide a basic suite of requirements', function () :void
+				{
+					// ==
+					so(23).should.equal(23);
+					// !=
+					so(23).should.not.equal(15);
+
+					// ===
+					so(arr).should.be.same(arr);
+					// !==
+					so(arr).should.not.be.same((new Array));
+
+					// == null
+					var nothing:String;
+					so(nothing).should.be.nil;
+					// != null
+					so(arr).should.not.be.nil;
+
+					// =~
+					so('hello').should.match(/ell/);
+					// !=~
+					so('hello').should.not.match(/egg/);
+
+					// "var is Type"
+					so(arr).should.be.a.kind_of(Array);
+					so(arr).should.not.be.a.kind_of(Boolean);
+				});
+
+				it ('should trap an empty specification', function () :void
+				{
+				});
+
+				it ('should trap an error', function () :void
+				{
+					so(arr);
+					throw(new Error('catch me if you can!'));
+				});
+
+				it ('should trap a failure', function () :void
+				{
+					so(23).should.equal(15);
+				});
+			});
+		}
+	}
+}
