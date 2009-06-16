@@ -4,12 +4,12 @@ package
 
 	public class TestAS3Spec extends Spec
 	{
-		private var arr:Array = new Array;
-
 		public function TestAS3Spec ()
 		{
 			describe ('as3spec', function () :void
 			{
+				const arr:Array = new Array;
+
 				it ('should provide a basic suite of requirements', function () :void
 				{
 					// ==

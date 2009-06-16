@@ -9,6 +9,7 @@ package as3spec
 
 		public function Context (story:String)
 		{
+			trace('');
 			trace(story);
 			specifications = [];
 		}
