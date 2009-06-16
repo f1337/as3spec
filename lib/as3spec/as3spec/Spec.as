@@ -9,10 +9,10 @@ package as3spec
 		private var context:Context;
 
 		// context
-		public function describe (story:String, block:Function) :void
+		public function describe (context:*, block:Function) :void
 		{
-			context = new Context(story);
-			context.describe(block)
+			this.context = new Context(context);
+			this.context.describe(block);
 			System.exit(0);
 		}
 

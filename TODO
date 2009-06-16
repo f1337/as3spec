@@ -1,4 +1,7 @@
+* 'creationComplete' for MXML specs
 * Failed assertions message: "expected, actual"
+* Summarize results: w Specifications, x Requirements, y Failures, z Errors
 * nested describe()
 * fail()
+* throw()
 * output formats: Tap, Knock, test/unit, SpecDox

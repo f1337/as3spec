@@ -7,10 +7,10 @@ package as3spec
 	{
 		private var specifications:Array; // LIFO stack: most recent spec at [0]
 
-		public function Context (story:String)
+		public function Context (context:*)
 		{
 			trace('');
-			trace(story);
+			trace(context);
 			specifications = [];
 		}
 
