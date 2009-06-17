@@ -76,7 +76,7 @@ package as3spec
 		}
 
 		// should.throw(error)
-		public function raise (message:String) :Boolean
+		public function raise (error:*) :Boolean
 		{
 			try
 			{
@@ -84,7 +84,18 @@ package as3spec
 			}
 			catch (exception:*)
 			{
-				return eval(exception == message);
+				if ((error is String) && (exception is Error))
+				{
+					return eval(exception.message == error);
+				}
+				else if (error is Class)
+				{
+					return eval(exception is error);
+				}
+				else
+				{
+					return eval(exception == error);
+				}
 			}
 			return eval(false);
 		}

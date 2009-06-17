@@ -50,7 +50,7 @@ package
 					so(arr).should.not.be.a.kind_of(Boolean);
 				});
 
-				it ('should provide should.raise and should.not.raise', function () :void
+				it ('should provide should.raise(message) and should.not.raise(message)', function () :void
 				{
 					// throws
 					so(function () :void
@@ -59,8 +59,21 @@ package
 					}).should.raise('an error');
 					so(function () :void
 					{
-						trace('woohoo!');
+						// do nothing
 					}).should.not.raise('an error');
+				});
+
+				it ('should provide should.raise(class) and should.not.raise(class)', function () :void
+				{
+					// throws
+					so(function () :void
+					{
+						throw(new Error('an error'));
+					}).should.raise(Error);
+					so(function () :void
+					{
+						// do nothing
+					}).should.not.raise(Error);
 				});
 
 				it ('should trap an empty specification', function () :void
