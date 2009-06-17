@@ -69,10 +69,24 @@ package as3spec
 		}
 
 		// ===
-		// should.be.same
+		// should.be.same(ref)
 		public function same (value:*) :Boolean
 		{
 			return eval(this.value === value);
+		}
+
+		// should.throw(error)
+		public function raise (message:String) :Boolean
+		{
+			try
+			{
+				this.value();
+			}
+			catch (exception:*)
+			{
+				return eval(exception == message);
+			}
+			return eval(false);
 		}
 
 
