@@ -12,32 +12,70 @@ package
 			{
 				const arr:Array = new Array;
 
-				it ('should provide a basic suite of requirements', function () :void
+				it ('should provide should.equal and should.not.equal', function () :void
 				{
 					// ==
 					so(23).should.equal(23);
 					// !=
 					so(23).should.not.equal(15);
+				});
 
+				it ('should provide should.be.same and should.not.be.same', function () :void
+				{
 					// ===
 					so(arr).should.be.same(arr);
 					// !==
 					so(arr).should.not.be.same((new Array));
+				});
 
+				it ('should provide should.be.nil and should.not.be.nil', function () :void
+				{
 					// == null
 					var nothing:String;
 					so(nothing).should.be.nil;
 					// != null
 					so(arr).should.not.be.nil;
+				});
 
+				it ('should provide should.match and should.not.match', function () :void
+				{
 					// =~
 					so('hello').should.match(/ell/);
 					// !=~
 					so('hello').should.not.match(/egg/);
+				});
 
+				it ('should provide should.be.a.kind_of and should.not.be.a.kind_of', function () :void
+				{
 					// "var is Type"
 					so(arr).should.be.a.kind_of(Array);
 					so(arr).should.not.be.a.kind_of(Boolean);
+				});
+
+				it ('should provide should.raise(message) and should.not.raise(message)', function () :void
+				{
+					// throws
+					so(function () :void
+					{
+						throw('an error');
+					}).should.raise('an error');
+					so(function () :void
+					{
+						// do nothing
+					}).should.not.raise('an error');
+				});
+
+				it ('should provide should.raise(class) and should.not.raise(class)', function () :void
+				{
+					// throws
+					so(function () :void
+					{
+						throw(new Error('an error'));
+					}).should.raise(Error);
+					so(function () :void
+					{
+						// do nothing
+					}).should.not.raise(Error);
 				});
 
 				it ('should trap an empty specification', function () :void
@@ -66,6 +104,7 @@ package
 		}
 	}
 }
+
 
 package
 {
