@@ -90,6 +90,15 @@ package
 				{
 					so(23).should.equal(15);
 				});
+
+
+				describe ('with a nested describe() block', function () :void
+				{
+					it ('should succeed', function () :void
+					{
+						so(true).should.equal(true);
+					});
+				});
 			});
 
 			describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
