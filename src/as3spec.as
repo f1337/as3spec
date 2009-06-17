@@ -6,7 +6,8 @@ package
 	{
 		public function as3spec()
 		{
-			var spec:TestAS3Spec = new TestAS3Spec;
+			new TestAS3Spec;
+			new TestUIComponentSpec;
 		}
 	}
 }

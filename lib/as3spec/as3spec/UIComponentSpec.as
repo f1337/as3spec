@@ -7,29 +7,29 @@ package as3spec
 
 	public class UIComponentSpec extends Spec
 	{
-		private var context:UIComponent;
-		private var block:Function;
-
 		// redirect describe until after creationComplete
-		override public function describe (context:*, block:Function) :void
+		override public function describe (...args) :void
 		{
-			if (context is UIComponent)
+			if (args[0] is UIComponent)
 			{
-				this.context = (context as UIComponent);
-				this.block = block;
-				this.context.addEventListener('creationComplete', do_describe);
+				var component:UIComponent = (args.shift() as UIComponent);
+				args.unshift(component.className);
 
-				Application.application.addChild(this.context);
+				component.addEventListener('creationComplete', function () :void
+				{
+					do_describe(args);
+				});
+				Application.application.addChild(component);
 			}
 			else
 			{
-				do_describe();
+				do_describe(args);
 			}
 		}
 
-		private function do_describe (...args) :void
+		private function do_describe (args:Array) :void
 		{
-			super.describe(this.context.className, this.block);
+			super.describe.apply(null, args);
 		}
 	}
 }

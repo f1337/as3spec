@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	creationComplete="runTests()"
+	>
+    <mx:Script>
+    	<![CDATA[
+			public function runTests() :void
+			{
+				new TestAS3Spec;
+				new TestUIComponentSpec;
+			}
+    	]]>
+    </mx:Script>
+</mx:Application>

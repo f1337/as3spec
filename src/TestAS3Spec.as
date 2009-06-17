@@ -53,6 +53,14 @@ package
 					so(23).should.equal(15);
 				});
 			});
+
+			describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
+			{
+				it ('should succeed', function () :void
+				{
+					so(true).should.equal(true);
+				});
+			});
 		}
 	}
 }

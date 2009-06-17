@@ -1,17 +1,17 @@
-Example:
+Examples:
 
 package
 {
 	import as3spec.*;
 
-	public class SomeSpec extends Spec
+	public class TestAS3Spec extends Spec
 	{
-		private var arr:Array = new Array;
-
-		public function SomeSpec ()
+		public function TestAS3Spec ()
 		{
 			describe ('as3spec', function () :void
 			{
+				const arr:Array = new Array;
+
 				it ('should provide a basic suite of requirements', function () :void
 				{
 					// ==
@@ -53,6 +53,50 @@ package
 				it ('should trap a failure', function () :void
 				{
 					so(23).should.equal(15);
+				});
+			});
+
+			describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
+			{
+				it ('should succeed', function () :void
+				{
+					so(true).should.equal(true);
+				});
+			});
+		}
+	}
+}
+
+package
+{
+	import as3spec.*;
+	import mx.controls.*;
+	import mx.core.*;
+
+	public class TestUIComponentSpec extends UIComponentSpec
+	{
+		public function TestUIComponentSpec ()
+		{
+			const instance:UIComponent = new Button;
+
+			describe (instance, 'is a component from the mx.controls package', function () :void
+			{
+				it ('should be a UIComponent', function () :void
+				{
+					so(instance).should.be.a.kind_of(UIComponent);
+				});
+				
+				it ('should have "initialized" before this specification was run', function () :void
+				{
+					so(instance.initialized).should.equal(true);
+				});
+			});
+
+			describe (instance, 'described()', 'with', 'arbitrary', 'arguments', function () :void
+			{
+				it ('should succeed', function () :void
+				{
+					so(true).should.equal(true);
 				});
 			});
 		}

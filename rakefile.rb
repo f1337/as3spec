@@ -7,7 +7,7 @@ sprout 'as3'
 # Configure your Project Model
 project_model :model do |m|
   m.project_name            = 'as3spec'
-  m.language                = 'as3'
+  m.language                = 'mxml'
   m.background_color        = '#FFFFFF'
   m.width                   = 970
   m.height                  = 550
