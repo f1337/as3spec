@@ -5,11 +5,19 @@ package as3spec
 
 	public class Specification extends EventDispatcher
 	{
+		static public var counter:Object = {
+			specifications: 0,
+			requirements:	0,
+			failures:		0,
+			errors:			0
+		};
+
 		private var requirements:Array; // LIFO stack: most recent req at [0]
 
 		public function Specification ()
 		{
 			requirements = [];
+			counter.specifications++;
 		}
 
 		public function apply (story:String, block:Function) :void
@@ -22,8 +30,7 @@ package as3spec
 			}
 			catch (error:Error)
 			{
-				status = 'ERROR';
-//				trace('Error message: ' + error.message);
+				status = (error.message == 'FAILED' ? 'FAILED' : 'ERROR');
 				trace('Stacktrace: ' + error.getStackTrace());
 			}
 			catch (exception:*)
@@ -34,15 +41,17 @@ package as3spec
 			{
 				if (requirements.length < 1) status = 'MISSING';
 				if (status != '') status = ' [' + status + ']';
+				if (status == 'FAILED') counter.failures++;
+				if (status == 'ERROR') counter.errors++;
 				trace('- it ' + story + status);
 			}
-			
 		}
 
 		public function require (value:*) :Should
 		{
 			var should:Should = new Should(value);
 			requirements.unshift(should);
+			counter.requirements++;
 			return should;
 		}
 	}

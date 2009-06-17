@@ -5,9 +5,6 @@ package as3spec
 
 	public class Should extends EventDispatcher
 	{
-		// >>> PUBLIC PROPERTIES
-//		public var success:Boolean =
-
 		// >>> PRIVATE PROPERTIES
 		private var positive:Boolean = true;
 		private var value:*;
@@ -84,7 +81,7 @@ package as3spec
 		private function eval (result:Boolean) :Boolean
 		{
 			var success:Boolean = (positive ? result : (! result));
-			if (! success) throw('FAILED');
+			if (! success) throw(new Error('FAILED'));
 			return (positive ? result : (! result));
 		}
 	}

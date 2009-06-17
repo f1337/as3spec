@@ -7,6 +7,8 @@ package as3spec
 	{
 		private var specifications:Array; // LIFO stack: most recent spec at [0]
 
+
+		// >>> PUBLIC METHODS
 		public function Context (context:*)
 		{
 			trace('');
@@ -14,8 +16,6 @@ package as3spec
 			specifications = [];
 		}
 
-
-		// >>> PUBLIC METHODS
 		public function describe (block:Function) :void
 		{
 			block.apply();
