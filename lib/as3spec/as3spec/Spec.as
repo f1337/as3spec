@@ -6,8 +6,6 @@ package as3spec
 
 	public class Spec extends EventDispatcher
 	{
-		static protected var exit_ok:Boolean = true;
-
 		// LIFO stack: most recent context at [0]
 		static private var contexts:Array = [];
 
@@ -26,8 +24,10 @@ package as3spec
 
 			contexts.unshift(new Context(context));
 			contexts[0].describe(block);
+			contexts.shift();
 
-			exit();
+			// tell Suite this Spec is done, move on to the next!
+			if (contexts.length == 0) dispatchEvent(new Event('complete'));
 		}
 
 		// specify
@@ -40,22 +40,6 @@ package as3spec
 		public function so (value:*) :Should
 		{
 			return contexts[0].require(value);
-		}
-
-
-		protected function exit () :void
-		{
-			if (! exit_ok) return;
-
-			// 50 specifications (380 requirements), 1 failures, 1 errors
-			var counter:Object = Specification.counter;
-			trace('');
-			trace(counter.specifications + ' specifications (' + 
-				counter.requirements + ' requirements), ' + 
-				counter.failures + ' failures, ' + 
-				counter.errors + ' errors'
-			);
-			System.exit(0);
 		}
 	}
 }

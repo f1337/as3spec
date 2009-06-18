@@ -6,8 +6,7 @@ package
 	{
 		public function as3spec()
 		{
-			new TestAS3Spec;
-			new TestUIComponentSpec;
+			new AllSpecs().run();
 		}
 	}
 }

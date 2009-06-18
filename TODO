@@ -1,7 +1,7 @@
 * Failed assertions message: "expected, actual"
-* nested describe()
+* Bug with nested describe() and sibling it()
+* Summary bug
 * output formats: Tap, Knock, test/unit, SpecDox
 * move backtrace to end of output
 * fail()
-* throw()
 * aliases: context(), specify(), require()

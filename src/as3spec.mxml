@@ -7,8 +7,7 @@
     	<![CDATA[
 			public function runTests() :void
 			{
-				new TestAS3Spec;
-				new TestUIComponentSpec;
+ 				new AllSpecs().run();
 			}
     	]]>
     </mx:Script>

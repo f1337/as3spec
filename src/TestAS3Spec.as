@@ -4,7 +4,7 @@ package
 
 	public class TestAS3Spec extends Spec
 	{
-		public function TestAS3Spec ()
+		public function run () :void
 		{
 			describe ('as3spec', function () :void
 			{

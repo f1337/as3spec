@@ -6,7 +6,7 @@ package
 
 	public class TestUIComponentSpec extends UIComponentSpec
 	{
-		public function TestUIComponentSpec ()
+		public function run () :void
 		{
 			const instance:UIComponent = new Button;
 
