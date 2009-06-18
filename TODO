@@ -1,6 +1,4 @@
 * Failed assertions message: "expected, actual"
-* Bug with nested describe() and sibling it()
-* Summary bug
 * output formats: Tap, Knock, test/unit, SpecDox
 * move backtrace to end of output
 * fail()
