@@ -1,5 +1,4 @@
 * output formats: Tap, Knock, test/unit, SpecDox
-* fail()
 * generators
 * runner
 * color output?

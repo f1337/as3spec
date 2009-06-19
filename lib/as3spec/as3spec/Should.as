@@ -68,14 +68,9 @@ package as3spec
 			return eval((this.value.match(pattern) != null), 'match', pattern);
 		}
 
-		// ===
-		// should.be.same(ref)
-		public function same (value:*) :Boolean
-		{
-			return eval((this.value === value), 'be the same object as', value);
-		}
-
-		// should.throw(error)
+		// should.throw(error) would be nice,
+		// but throw is a reserved word:
+		// should.raise(error)
 		public function raise (error:*) :Boolean
 		{
 			var raised:Boolean = false;
@@ -100,6 +95,19 @@ package as3spec
 				}
 			}
 			return eval(raised, 'raise', error);
+		}
+
+		// ===
+		// should.be.same(ref)
+		public function same (value:*) :Boolean
+		{
+			return eval((this.value === value), 'be the same object as', value);
+		}
+
+		// should.trigger('event')
+		public function trigger (event:String) :Boolean
+		{
+			return eval((this.value.hasEventListener(event)), 'trigger', event);
 		}
 
 
