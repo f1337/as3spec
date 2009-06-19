@@ -83,6 +83,19 @@ package
 					}).should.not.raise(Error);
 				});
 
+				it ('provides should.raise() and should.not.raise()', function () :void
+				{
+					// throws
+					so(function () :void
+					{
+						throw(new Error('an error'));
+					}).should.raise();
+					so(function () :void
+					{
+						// do nothing
+					}).should.not.raise();
+				});
+
 				it ('provides should.trigger and should.not.trigger', function () :void
 				{
 					var t:Timer = new Timer(1000);

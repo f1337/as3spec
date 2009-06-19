@@ -77,7 +77,7 @@ package as3spec
 		// should.throw(error) would be nice,
 		// but throw is a reserved word:
 		// should.raise(error)
-		public function raise (error:*) :Boolean
+		public function raise (error:* = null) :Boolean
 		{
 			var raised:Boolean = false;
 
@@ -87,7 +87,11 @@ package as3spec
 			}
 			catch (exception:*)
 			{
-				if ((error is String) && (exception is Error))
+				if (error == null)
+				{
+					raised = true;
+				}
+				else if ((error is String) && (exception is Error))
 				{
 					raised = (exception.message == error);
 				}
