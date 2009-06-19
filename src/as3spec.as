@@ -6,7 +6,7 @@ package
 	{
 		public function as3spec()
 		{
-			new AllSpecs().run();
+			trace('woohoo!');
 		}
 	}
 }

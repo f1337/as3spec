@@ -5,12 +5,13 @@ sprout 'as3'
 
 ############################################
 # Configure your Project Model
-project_model :model do |m|
+model = project_model :model do |m|
   m.project_name            = 'as3spec'
-  m.language                = 'mxml'
+  m.language                = 'as3'
   m.background_color        = '#FFFFFF'
   m.width                   = 970
   m.height                  = 550
+  m.test_output							= "#{m.bin_dir}/as3specRunner.swf"
   # m.use_fdb               = true
   # m.use_fcsh              = true
   # m.preprocessor          = 'cpp -D__DEBUG=false -P - - | tail -c +3'
@@ -24,12 +25,21 @@ project_model :model do |m|
   # m.asset_dir             = 'assets'
   # m.compiler_gem_name     = 'sprout-flex4sdk-tool'
   # m.compiler_gem_version  = '>= 4.0.0'
-  m.source_path           << "#{m.lib_dir}/as3spec"
+#  m.source_path           << "#{m.lib_dir}/as3spec"
   # m.libraries             << :corelib
 end
 
 desc 'Compile and debug the application'
 debug :debug
+
+desc 'Compile run the test harness'
+flashplayer :test => model.test_output
+mxmlc model.test_output => :model do |t|
+	t.debug				 = true
+	t.input				 = "#{model.src_dir}/as3specRunner.mxml"
+	t.source_path << model.test_dir
+  t.source_path << "#{model.lib_dir}/as3spec"
+end
 
 desc 'Compile the optimized deployment'
 deploy :deploy
