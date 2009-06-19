@@ -108,6 +108,24 @@ package
 					so(true).should.equal(true);
 				});
 			});
+
+			context ('context()', function () :void
+			{
+				specify ('should support specify() and require()', function () :void
+				{
+					require(true).should.equal(true);
+				});
+
+				specify ('should support expect()', function () :void
+				{
+					expect(true).should.equal(true);
+				});
+
+				specify ('should support therefore()', function () :void
+				{
+					therefore(true).should.equal(true);
+				});
+			});
 		}
 	}
 }

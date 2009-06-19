@@ -24,7 +24,7 @@ package as3spec
 			}
 			catch (error:Error)
 			{
-				status = (error.message == 'FAILED' ? 'FAILED' : 'ERROR');
+				status = (error.name == 'FAILED' ? 'FAILED' : 'ERROR');
 				counter.stacktraces.push(error.getStackTrace());
 			}
 			catch (exception:*)

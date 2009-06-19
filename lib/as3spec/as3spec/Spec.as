@@ -9,11 +9,8 @@ package as3spec
 		// LIFO stack: most recent context at [0]
 		static private var contexts:Array = [];
 
-		// context
-/*		describe (context:*, story:String, block:Function) */
-/*		describe (context:*, block:Function) */
-/*		describe (story:String, block:Function) */
-		public function describe (...args) :void
+		public var describe:Function = context;
+		public function context (...args) :void
 		{
 			if (args.length < 2) throw('invalid arguments for describe()');
 
@@ -30,14 +27,16 @@ package as3spec
 			if (contexts.length == 0) dispatchEvent(new Event('complete'));
 		}
 
-		// specify
-		public function it (story:String, block:Function) :void
+		public var it:Function = specify;
+		public function specify (story:String, block:Function) :void
 		{
 			contexts[0].specify(story, block);
 		}
 
-		// require
-		public function so (value:*) :Should
+		public var expect:Function = require;
+		public var so:Function = require;
+		public var therefore:Function = require;
+		public function require (value:*) :Should
 		{
 			return contexts[0].require(value);
 		}

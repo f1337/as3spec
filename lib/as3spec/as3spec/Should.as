@@ -28,7 +28,7 @@ package as3spec
 		// should.be.nil
 		public function get nil () :Boolean
 		{
-			return eval(this.value == null);
+			return eval((this.value == null), 'be nil');
 		}
 
 		// !
@@ -51,33 +51,35 @@ package as3spec
 		// should.equal(123)
 		public function equal (value:*) :Boolean
 		{
-			return eval(this.value == value);
+			return eval((this.value == value), 'equal', value);
 		}
 
 		// is Type
 		// should.be.a.kind_of(Object)
 		public function kind_of (klass:*) :Boolean
 		{
-			return eval(this.value is klass);
+			return eval((this.value is klass), 'be a kind of', klass);
 		}
 
 		// =~
 		// should.match(/pattern/)
 		public function match (pattern:*) :Boolean
 		{
-			return eval(this.value.match(pattern) != null);
+			return eval((this.value.match(pattern) != null), 'match', pattern);
 		}
 
 		// ===
 		// should.be.same(ref)
 		public function same (value:*) :Boolean
 		{
-			return eval(this.value === value);
+			return eval((this.value === value), 'be the same object as', value);
 		}
 
 		// should.throw(error)
 		public function raise (error:*) :Boolean
 		{
+			var raised:Boolean = false;
+
 			try
 			{
 				this.value();
@@ -86,27 +88,36 @@ package as3spec
 			{
 				if ((error is String) && (exception is Error))
 				{
-					return eval(exception.message == error);
+					raised = (exception.message == error);
 				}
 				else if (error is Class)
 				{
-					return eval(exception is error);
+					raised = (exception is error);
 				}
 				else
 				{
-					return eval(exception == error);
+					raised = (exception == error);
 				}
 			}
-			return eval(false);
+			return eval(raised, 'raise', error);
 		}
 
 
 
 		// >>> PRIVATE METHODS
-		private function eval (result:Boolean) :Boolean
+		private function eval (result:Boolean, behavior:String, expected:* = '') :Boolean
 		{
 			var success:Boolean = (positive ? result : (! result));
-			if (! success) throw(new Error('FAILED'));
+			if (! success)
+			{
+				
+				var error:Error = new Error();
+				error.message = value + ' should ';
+				error.message += (positive ? '' : 'not ');
+				error.message += behavior + ' ' + expected;
+				error.name = 'FAILED';
+				throw(error);
+			}
 			return (positive ? result : (! result));
 		}
 	}

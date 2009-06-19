@@ -8,7 +8,7 @@ package as3spec
 	public class UIComponentSpec extends Spec
 	{
 		// redirect describe until after creationComplete
-		override public function describe (...args) :void
+		override public function context (...args) :void
 		{
 			if (args[0] is UIComponent)
 			{
@@ -17,19 +17,19 @@ package as3spec
 
 				component.addEventListener('creationComplete', function () :void
 				{
-					do_describe(args);
+					invoke_context(args);
 				});
 				Application.application.addChild(component);
 			}
 			else
 			{
-				do_describe(args);
+				invoke_context(args);
 			}
 		}
 
-		private function do_describe (args:Array) :void
+		private function invoke_context (args:Array) :void
 		{
-			super.describe.apply(null, args);
+			super.context.apply(null, args);
 		}
 	}
 }

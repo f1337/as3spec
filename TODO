@@ -1,5 +1,7 @@
-* Failed assertions message: "expected, actual"
 * output formats: Tap, Knock, test/unit, SpecDox
-* move backtrace to end of output
 * fail()
-* aliases: context(), specify(), require()
+* generators
+* runner
+* color output?
+* gem
+* swc
