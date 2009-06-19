@@ -1,5 +1,12 @@
 * output formats: Tap, Knock, test/unit, SpecDox
 * generators
+** spec
+** runner
+** presentation model
+** domain model?
+** mate' eventmap?
+* rake tasks:
+** generate
 * runner
 * color output?
 * gem

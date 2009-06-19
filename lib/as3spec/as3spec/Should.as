@@ -61,6 +61,12 @@ package as3spec
 			return eval((this.value is klass), 'be a kind of', klass);
 		}
 
+		// should.have('property')
+		public function have (property:String) :Boolean
+		{
+			return eval((this.value.hasOwnProperty(property)), 'have property:', property);
+		}
+
 		// =~
 		// should.match(/pattern/)
 		public function match (pattern:*) :Boolean
