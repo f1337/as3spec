@@ -36,6 +36,12 @@ package
 					so(arr).should.not.be.nil;
 				});
 
+				it ('provides should.have and should.not.have', function () :void
+				{
+					so(arr).should.have('length');
+					so(arr).should.not.have('kittens');
+				});
+
 				it ('provides should.match and should.not.match', function () :void
 				{
 					// =~
@@ -81,7 +87,8 @@ package
 				{
 					var t:Timer = new Timer(1000);
 					so(t).should.not.trigger('timer');
-/*					so(t).should.trigger('timer');*/
+					t.addEventListener('timer', function () :void {});
+					so(t).should.trigger('timer');
 				});
 
 				it ('catches an empty specification', function () :void
