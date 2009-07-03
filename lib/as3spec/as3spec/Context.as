@@ -11,8 +11,8 @@ package as3spec
 		// >>> PUBLIC METHODS
 		public function Context (context:*)
 		{
-			trace('');
-			trace(context);
+			Spec.puts('');
+			Spec.puts(context);
 			specifications = [];
 		}
 

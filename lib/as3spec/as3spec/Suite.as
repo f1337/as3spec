@@ -40,7 +40,7 @@ package as3spec
 			trace('');
 			trace(counter.stacktraces.join("\n\n"));
 			trace('');
-			trace(counter.specifications + ' specifications (' + 
+			Spec.puts(counter.specifications + ' specifications (' + 
 				counter.requirements + ' requirements), ' + 
 				counter.failures + ' failures, ' + 
 				counter.errors + ' errors'

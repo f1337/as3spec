@@ -37,7 +37,7 @@ package as3spec
 				if (status == 'FAILED') counter.failures++;
 				if (status == 'ERROR') counter.errors++;
 				if (status != '') status = ' [' + status + ']';
-				trace('- it ' + story + status);
+				Spec.puts('- it ' + story + status);
 			}
 		}
 

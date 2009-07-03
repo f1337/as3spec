@@ -1,7 +1,10 @@
 require 'sprout'
+
 # Optionally load gems from a server other than rubyforge:
 # set_sources 'http://gems.projectsprouts.org'
 sprout 'as3'
+
+require 'tasks/flashplayer_redgreen_task'
 
 ############################################
 # Configure your Project Model

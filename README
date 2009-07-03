@@ -1,18 +1,23 @@
+Requires sprouts: http://www.projectsprouts.org
+
+'rake test'
+
 Examples:
 
 package
 {
 	import as3spec.*;
+	import flash.utils.*;
 
 	public class TestAS3Spec extends Spec
 	{
-		public function TestAS3Spec ()
+		public function run () :void
 		{
 			describe ('as3spec', function () :void
 			{
 				const arr:Array = new Array;
 
-				it ('should provide should.equal and should.not.equal', function () :void
+				it ('provides should.equal and should.not.equal', function () :void
 				{
 					// ==
 					so(23).should.equal(23);
@@ -20,7 +25,7 @@ package
 					so(23).should.not.equal(15);
 				});
 
-				it ('should provide should.be.same and should.not.be.same', function () :void
+				it ('provides should.be.same and should.not.be.same', function () :void
 				{
 					// ===
 					so(arr).should.be.same(arr);
@@ -28,7 +33,7 @@ package
 					so(arr).should.not.be.same((new Array));
 				});
 
-				it ('should provide should.be.nil and should.not.be.nil', function () :void
+				it ('provides should.be.nil and should.not.be.nil', function () :void
 				{
 					// == null
 					var nothing:String;
@@ -37,7 +42,13 @@ package
 					so(arr).should.not.be.nil;
 				});
 
-				it ('should provide should.match and should.not.match', function () :void
+				it ('provides should.have and should.not.have', function () :void
+				{
+					so(arr).should.have('length');
+					so(arr).should.not.have('kittens');
+				});
+
+				it ('provides should.match and should.not.match', function () :void
 				{
 					// =~
 					so('hello').should.match(/ell/);
@@ -45,14 +56,14 @@ package
 					so('hello').should.not.match(/egg/);
 				});
 
-				it ('should provide should.be.a.kind_of and should.not.be.a.kind_of', function () :void
+				it ('provides should.be.a.kind_of and should.not.be.a.kind_of', function () :void
 				{
 					// "var is Type"
 					so(arr).should.be.a.kind_of(Array);
 					so(arr).should.not.be.a.kind_of(Boolean);
 				});
 
-				it ('should provide should.raise(message) and should.not.raise(message)', function () :void
+				it ('provides should.raise(message) and should.not.raise(message)', function () :void
 				{
 					// throws
 					so(function () :void
@@ -65,7 +76,7 @@ package
 					}).should.not.raise('an error');
 				});
 
-				it ('should provide should.raise(class) and should.not.raise(class)', function () :void
+				it ('provides should.raise(class) and should.not.raise(class)', function () :void
 				{
 					// throws
 					so(function () :void
@@ -78,19 +89,49 @@ package
 					}).should.not.raise(Error);
 				});
 
-				it ('should trap an empty specification', function () :void
+				it ('provides should.raise() and should.not.raise()', function () :void
+				{
+					// throws
+					so(function () :void
+					{
+						throw(new Error('an error'));
+					}).should.raise();
+					so(function () :void
+					{
+						// do nothing
+					}).should.not.raise();
+				});
+
+				it ('provides should.trigger and should.not.trigger', function () :void
+				{
+					var t:Timer = new Timer(1000);
+					so(t).should.not.trigger('timer');
+					t.addEventListener('timer', function () :void {});
+					so(t).should.trigger('timer');
+				});
+
+				it ('catches an empty specification', function () :void
 				{
 				});
 
-				it ('should trap an error', function () :void
+				it ('catches an error', function () :void
 				{
 					so(arr);
 					throw(new Error('catch me if you can!'));
 				});
 
-				it ('should trap a failure', function () :void
+				it ('catches a failure', function () :void
 				{
 					so(23).should.equal(15);
+				});
+
+
+				describe ('with a nested describe() block', function () :void
+				{
+					it ('should succeed', function () :void
+					{
+						so(true).should.equal(true);
+					});
 				});
 			});
 
@@ -101,10 +142,27 @@ package
 					so(true).should.equal(true);
 				});
 			});
+
+			context ('context()', function () :void
+			{
+				specify ('should support specify() and require()', function () :void
+				{
+					require(true).should.equal(true);
+				});
+
+				specify ('should support expect()', function () :void
+				{
+					expect(true).should.equal(true);
+				});
+
+				specify ('should support therefore()', function () :void
+				{
+					therefore(true).should.equal(true);
+				});
+			});
 		}
 	}
 }
-
 
 package
 {
@@ -114,7 +172,7 @@ package
 
 	public class TestUIComponentSpec extends UIComponentSpec
 	{
-		public function TestUIComponentSpec ()
+		public function run () :void
 		{
 			const instance:UIComponent = new Button;
 

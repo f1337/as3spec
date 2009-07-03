@@ -40,5 +40,11 @@ package as3spec
 		{
 			return contexts[0].require(value);
 		}
+
+		// trace() wrapper
+		static public function puts (s:String) :void
+		{
+			trace('[as3spec] ' + s);
+		}
 	}
 }
