@@ -56,6 +56,7 @@ swc :swc
 task :default => :debug
 
 
+# build gem
 begin
   require 'jeweler'
   Jeweler::Tasks.new do |gem|
@@ -64,15 +65,44 @@ begin
     gem.description = %Q{AS3Spec is a tiny BDD framework for AS3, inspired by Bacon and RSpec. Built upon sprout project-generation tool for ActionScript/Flash/Flex/AIR.}
     gem.email = "disinnovate@gmail.com"
     gem.homepage = "http://github.com/disinnovate/as3spec"
-    gem.authors = ["Michael Fleet"]
+    gem.authors = [ "Michael Fleet" ]
 		gem.executables = []
 		gem.files = FileList['sprout.spec']
 		gem.extra_rdoc_files = []
 		gem.require_path = '.'
 #		gem.add_dependency('sprout', '>= 0.7.206')
+		gem.rubyforge_project = 'as3spec'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+end
+
+# publish gem to rubyforge
+begin
+  require 'rake/contrib/sshpublisher'
+  namespace :rubyforge do
+
+    desc "Release gem and RDoc documentation to RubyForge"
+#    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
+    task :release => ["rubyforge:release:gem"]
+
+    namespace :release do
+      desc "Publish RDoc to RubyForge."
+      task :docs => [:rdoc] do
+        config = YAML.load(
+            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
+        )
+
+        host = "#{config['username']}@rubyforge.org"
+        remote_dir = "/var/www/gforge-projects/the-perfect-gem/"
+        local_dir = 'rdoc'
+
+        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
+      end
+    end
+  end
+rescue LoadError
+  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
 end
