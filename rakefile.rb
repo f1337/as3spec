@@ -41,7 +41,6 @@ mxmlc model.test_output => :model do |t|
 	t.debug				 = true
 	t.input				 = "#{model.src_dir}/as3specRunner.mxml"
 	t.source_path << model.test_dir
-  t.source_path << "#{model.lib_dir}/as3spec"
 end
 
 desc 'Compile the optimized deployment'
