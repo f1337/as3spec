@@ -31,7 +31,7 @@ RubyGems installation instructions for other platforms are availabe at: http://d
 
 Open your favorite terminal emulator (PuTTY, Terminal, etc.):
 
-	$ sudo gem install sprout
+  $ sudo gem install sprout
 
 DOS/Windows users do not enter sudo
 
