@@ -31,7 +31,7 @@ RubyGems installation instructions for other platforms are availabe at: http://d
 
 Open your favorite terminal emulator (PuTTY, Terminal, etc.):
 
-    $ sudo gem install sprout
+	$ sudo gem install sprout
 
 DOS/Windows users do not enter sudo
 
@@ -39,15 +39,15 @@ DOS/Windows users do not enter sudo
 
 From http://projectsprouts.org/:
 
-		$ sprout -n as3 SomeProject
-		$ cd SomeProject
-		$ rake
-		$ script/generate utils.MathUtil
-		$ rake test
+	$ sprout -n as3 SomeProject
+	$ cd SomeProject
+	$ rake
+	$ script/generate utils.MathUtil
+	$ rake test
 
 Windows users may have to run:
 
-    $ script\generate.rb utils.MathUtil
+	$ script\generate.rb utils.MathUtil
 
 === Why Sprouts?
 
@@ -56,198 +56,198 @@ There is a well written answer to that question at http://www.projectsprouts.org
 
 == Now we can BDD in AS3
 
-		package
+	package
+	{
+		import as3spec.*;
+		import flash.utils.*;
+
+		public class TestAS3Spec extends Spec
 		{
-			import as3spec.*;
-			import flash.utils.*;
-
-			public class TestAS3Spec extends Spec
+			public function run () :void
 			{
-				public function run () :void
+				describe ('as3spec', function () :void
 				{
-					describe ('as3spec', function () :void
+					const arr:Array = new Array;
+
+					it ('provides should.equal and should.not.equal', function () :void
 					{
-						const arr:Array = new Array;
-
-						it ('provides should.equal and should.not.equal', function () :void
-						{
-							// ==
-							so(23).should.equal(23);
-							// !=
-							so(23).should.not.equal(15);
-						});
-
-						it ('provides should.be.same and should.not.be.same', function () :void
-						{
-							// ===
-							so(arr).should.be.same(arr);
-							// !==
-							so(arr).should.not.be.same((new Array));
-						});
-
-						it ('provides should.be.nil and should.not.be.nil', function () :void
-						{
-							// == null
-							var nothing:String;
-							so(nothing).should.be.nil;
-							// != null
-							so(arr).should.not.be.nil;
-						});
-
-						it ('provides should.have and should.not.have', function () :void
-						{
-							so(arr).should.have('length');
-							so(arr).should.not.have('kittens');
-						});
-
-						it ('provides should.match and should.not.match', function () :void
-						{
-							// =~
-							so('hello').should.match(/ell/);
-							// !=~
-							so('hello').should.not.match(/egg/);
-						});
-
-						it ('provides should.be.a.kind_of and should.not.be.a.kind_of', function () :void
-						{
-							// "var is Type"
-							so(arr).should.be.a.kind_of(Array);
-							so(arr).should.not.be.a.kind_of(Boolean);
-						});
-
-						it ('provides should.raise(message) and should.not.raise(message)', function () :void
-						{
-							// throws
-							so(function () :void
-							{
-								throw('an error');
-							}).should.raise('an error');
-							so(function () :void
-							{
-								// do nothing
-							}).should.not.raise('an error');
-						});
-
-						it ('provides should.raise(class) and should.not.raise(class)', function () :void
-						{
-							// throws
-							so(function () :void
-							{
-								throw(new Error('an error'));
-							}).should.raise(Error);
-							so(function () :void
-							{
-								// do nothing
-							}).should.not.raise(Error);
-						});
-
-						it ('provides should.raise() and should.not.raise()', function () :void
-						{
-							// throws
-							so(function () :void
-							{
-								throw(new Error('an error'));
-							}).should.raise();
-							so(function () :void
-							{
-								// do nothing
-							}).should.not.raise();
-						});
-
-						it ('provides should.trigger and should.not.trigger', function () :void
-						{
-							var t:Timer = new Timer(1000);
-							so(t).should.not.trigger('timer');
-							t.addEventListener('timer', function () :void {});
-							so(t).should.trigger('timer');
-						});
-
-						it ('catches an empty specification', function () :void
-						{
-						});
-
-						it ('catches an error', function () :void
-						{
-							so(arr);
-							throw(new Error('catch me if you can!'));
-						});
-
-						it ('catches a failure', function () :void
-						{
-							so(23).should.equal(15);
-						});
-
-
-						describe ('with a nested describe() block', function () :void
-						{
-							it ('should succeed', function () :void
-							{
-								so(true).should.equal(true);
-							});
-						});
+						// ==
+						so(23).should.equal(23);
+						// !=
+						so(23).should.not.equal(15);
 					});
 
-					describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
+					it ('provides should.be.same and should.not.be.same', function () :void
+					{
+						// ===
+						so(arr).should.be.same(arr);
+						// !==
+						so(arr).should.not.be.same((new Array));
+					});
+
+					it ('provides should.be.nil and should.not.be.nil', function () :void
+					{
+						// == null
+						var nothing:String;
+						so(nothing).should.be.nil;
+						// != null
+						so(arr).should.not.be.nil;
+					});
+
+					it ('provides should.have and should.not.have', function () :void
+					{
+						so(arr).should.have('length');
+						so(arr).should.not.have('kittens');
+					});
+
+					it ('provides should.match and should.not.match', function () :void
+					{
+						// =~
+						so('hello').should.match(/ell/);
+						// !=~
+						so('hello').should.not.match(/egg/);
+					});
+
+					it ('provides should.be.a.kind_of and should.not.be.a.kind_of', function () :void
+					{
+						// "var is Type"
+						so(arr).should.be.a.kind_of(Array);
+						so(arr).should.not.be.a.kind_of(Boolean);
+					});
+
+					it ('provides should.raise(message) and should.not.raise(message)', function () :void
+					{
+						// throws
+						so(function () :void
+						{
+							throw('an error');
+						}).should.raise('an error');
+						so(function () :void
+						{
+							// do nothing
+						}).should.not.raise('an error');
+					});
+
+					it ('provides should.raise(class) and should.not.raise(class)', function () :void
+					{
+						// throws
+						so(function () :void
+						{
+							throw(new Error('an error'));
+						}).should.raise(Error);
+						so(function () :void
+						{
+							// do nothing
+						}).should.not.raise(Error);
+					});
+
+					it ('provides should.raise() and should.not.raise()', function () :void
+					{
+						// throws
+						so(function () :void
+						{
+							throw(new Error('an error'));
+						}).should.raise();
+						so(function () :void
+						{
+							// do nothing
+						}).should.not.raise();
+					});
+
+					it ('provides should.trigger and should.not.trigger', function () :void
+					{
+						var t:Timer = new Timer(1000);
+						so(t).should.not.trigger('timer');
+						t.addEventListener('timer', function () :void {});
+						so(t).should.trigger('timer');
+					});
+
+					it ('catches an empty specification', function () :void
+					{
+					});
+
+					it ('catches an error', function () :void
+					{
+						so(arr);
+						throw(new Error('catch me if you can!'));
+					});
+
+					it ('catches a failure', function () :void
+					{
+						so(23).should.equal(15);
+					});
+
+
+					describe ('with a nested describe() block', function () :void
 					{
 						it ('should succeed', function () :void
 						{
 							so(true).should.equal(true);
 						});
 					});
+				});
 
-					context ('context()', function () :void
-					{
-						specify ('should support specify() and require()', function () :void
-						{
-							require(true).should.equal(true);
-						});
-
-						specify ('should support expect()', function () :void
-						{
-							expect(true).should.equal(true);
-						});
-
-						specify ('should support therefore()', function () :void
-						{
-							therefore(true).should.equal(true);
-						});
-					});
-				}
-			}
-		}
-
-		package
-		{
-			import as3spec.*;
-			import mx.controls.*;
-			import mx.core.*;
-
-			public class TestUIComponentSpec extends UIComponentSpec
-			{
-				public function run () :void
+				describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
 				{
-					const instance:UIComponent = new Button;
-
-					describe (instance, 'is a component from the mx.controls package', function () :void
+					it ('should succeed', function () :void
 					{
-						it ('should be a UIComponent', function () :void
-						{
-							so(instance).should.be.a.kind_of(UIComponent);
-						});
-				
-						it ('should have "initialized" before this specification was run', function () :void
-						{
-							so(instance.initialized).should.equal(true);
-						});
+						so(true).should.equal(true);
+					});
+				});
+
+				context ('context()', function () :void
+				{
+					specify ('should support specify() and require()', function () :void
+					{
+						require(true).should.equal(true);
 					});
 
-					describe (instance, 'described()', 'with', 'arbitrary', 'arguments', function () :void
+					specify ('should support expect()', function () :void
 					{
-						it ('should succeed', function () :void
-						{
-							so(true).should.equal(true);
-						});
+						expect(true).should.equal(true);
 					});
-				}
+
+					specify ('should support therefore()', function () :void
+					{
+						therefore(true).should.equal(true);
+					});
+				});
 			}
 		}
+	}
+
+	package
+	{
+		import as3spec.*;
+		import mx.controls.*;
+		import mx.core.*;
+
+		public class TestUIComponentSpec extends UIComponentSpec
+		{
+			public function run () :void
+			{
+				const instance:UIComponent = new Button;
+
+				describe (instance, 'is a component from the mx.controls package', function () :void
+				{
+					it ('should be a UIComponent', function () :void
+					{
+						so(instance).should.be.a.kind_of(UIComponent);
+					});
+			
+					it ('should have "initialized" before this specification was run', function () :void
+					{
+						so(instance.initialized).should.equal(true);
+					});
+				});
+
+				describe (instance, 'described()', 'with', 'arbitrary', 'arguments', function () :void
+				{
+					it ('should succeed', function () :void
+					{
+						so(true).should.equal(true);
+					});
+				});
+			}
+		}
+	}
