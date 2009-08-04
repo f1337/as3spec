@@ -97,3 +97,14 @@ begin
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
+
+# publish gem to rubyforge
+begin
+  require 'rake/contrib/sshpublisher'
+  namespace :rubyforge do
+    desc "Release gem and RDoc documentation to RubyForge"
+    task :release => ["rubyforge:release:gem"]
+  end
+rescue LoadError
+  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
+end
