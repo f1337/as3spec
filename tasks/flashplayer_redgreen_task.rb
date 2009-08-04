@@ -29,10 +29,13 @@ module Sprout
 				else :ok
 				end
 
-				summary_color = out.match(/0 failures, 0 errors/).nil? ? 'F' : :ok
+				summary_color = out.match(/0 pending/).nil? ? 'M' : :ok
+				# summary_color = 'E' if out.match(/0 errors/).nil?
+				# summary_color = 'F' if out.match(/0 failures/).nil?
+				summary_color = 'F' if out.match(/0 failures, 0 errors/).nil?
 
 				out.sub(/^\[as3spec\] (- .*)?$/, 
-					colorize_string('\1', requirement_color)).sub(/\[as3spec\]\s*/, '').sub(/^.+\d+ failures, \d+ errors$/, 
+					colorize_string('\1', requirement_color)).sub(/\[as3spec\]\s*/, '').sub(/^.+\d+ failures, \d+ errors, \d+ pending$/, 
 						colorize_string('\0', summary_color))
 			end
 

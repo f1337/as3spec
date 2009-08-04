@@ -33,7 +33,11 @@ package as3spec
 			}
 			finally
 			{
-				if (requirements.length < 1) status = 'MISSING';
+				if (requirements.length < 1)
+				{
+					status = 'MISSING';
+					counter.missing++;
+				}
 				if (status == 'FAILED') counter.failures++;
 				if (status == 'ERROR') counter.errors++;
 				if (status != '') status = ' [' + status + ']';

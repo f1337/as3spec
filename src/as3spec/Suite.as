@@ -12,6 +12,7 @@ package as3spec
 			requirements:	0,
 			failures:		0,
 			errors:			0,
+			missing:		0,
 			stacktraces:	[]
 		};
 
@@ -40,11 +41,14 @@ package as3spec
 			trace('');
 			trace(counter.stacktraces.join("\n\n"));
 			trace('');
-			Spec.puts(counter.specifications + ' specifications (' + 
+			var summary:String = (
+				counter.specifications + ' specifications (' + 
 				counter.requirements + ' requirements), ' + 
 				counter.failures + ' failures, ' + 
-				counter.errors + ' errors'
+				counter.errors + ' errors, ' +
+				counter.missing + ' pending'
 			);
+			Spec.puts(summary);
 		}
 
 		private function exit (e:Object = null) :void
