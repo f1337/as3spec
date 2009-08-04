@@ -1,17 +1,19 @@
 * output formats: Tap, Knock, test/unit, SpecDox
+* Win32 color output
 * better documentation
+** asdoc
 ** wiki
 ** README
 ** blog post
 *** "how we BDD in AS3 with sprout and as3spec"
 *** Account example
-*** simple "view" example
+*** simple "view + presentation model" example
 *** screencast?
 * compatibility with AsUnit, should: add specs to AsUnit runners, add tests to as3spec runners, run both without error
 * gems:
 ** http://projectsprouts.org/rdoc/classes/Sprout/Sprout.html
-** rubyforge project: submitted, awaiting approval
-** sprout-as3spec-library: swc for as3spec AS classes
+** rake task for creating sprout-as3spec-library.gem
+** rake task for creating as3spec.swc
 ** sprout-as3spec-bundle: "sprout -n as3spec projectname" should
 *** automatically download sprout-as3spec-bundle
 *** create the project
@@ -25,3 +27,9 @@
 **** model/presenter (presentation model)
 **** spec
 **** runner
+
+NOTES:
+- "pkg/sprout-as3spec-library.gem" is a gem containing a *single file* called "sprout.spec"
+- "sprout.spec" is a text file which gives Sprout the URL to "as3spec.swc.zip"
+- "bin/as3spec.swc.zip" is a ZIP file containing a *single file* called "as3spec.swc"
+- "bin/as3spec.swc" is a compiled SWC of as3spec

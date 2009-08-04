@@ -56,6 +56,25 @@ swc :swc
 task :default => :debug
 
 
+task :sprout => [ :swc, :gemspec, :build ]
+
+# gem_wrap :as3spec do |t|
+#   t.version       = '0.1.0'
+#   t.summary       = "AsUnit3 is an ActionScript unit test framework for AIR, Flex 2/3 and ActionScript 3 projects"
+#   t.author        = "Luke Bayes and Ali Mills"
+#   t.email         = "projectsprouts@googlegroups.com"
+#   t.homepage      = "http://www.asunit.org"
+#   t.sprout_spec   =<<EOF
+# - !ruby/object:Sprout::RemoteFileTarget 
+#   platform: universal
+#   url: http://projectsprouts.googlecode.com/files/asunit3-1.1.zip
+#   source_path: ''
+# EOF
+# end
+
+
+
+
 # build gem
 begin
   require 'jeweler'
@@ -77,32 +96,4 @@ begin
 
 rescue LoadError
   puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
-end
-
-# publish gem to rubyforge
-begin
-  require 'rake/contrib/sshpublisher'
-  namespace :rubyforge do
-
-    desc "Release gem and RDoc documentation to RubyForge"
-#    task :release => ["rubyforge:release:gem", "rubyforge:release:docs"]
-    task :release => ["rubyforge:release:gem"]
-
-    namespace :release do
-      desc "Publish RDoc to RubyForge."
-      task :docs => [:rdoc] do
-        config = YAML.load(
-            File.read(File.expand_path('~/.rubyforge/user-config.yml'))
-        )
-
-        host = "#{config['username']}@rubyforge.org"
-        remote_dir = "/var/www/gforge-projects/the-perfect-gem/"
-        local_dir = 'rdoc'
-
-        Rake::SshDirPublisher.new(host, remote_dir, local_dir).upload
-      end
-    end
-  end
-rescue LoadError
-  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
 end
