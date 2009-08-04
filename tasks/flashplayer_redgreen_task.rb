@@ -11,7 +11,7 @@ module Sprout
 			    require 'Win32/Console/ANSI' ;\
 				 	COLORIZE = true
 			  rescue LoadError ;\
-			    warn "You must 'gem install win32console' to use colour on Windows" ;\
+			    warn "Please 'gem install win32console' for color output on Windows" ;\
 					COLORIZE = false
 			  end
 			end
