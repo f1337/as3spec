@@ -1,3 +1,4 @@
+require 'rake/packagetask'
 require 'sprout'
 
 # Optionally load gems from a server other than rubyforge:
@@ -5,6 +6,8 @@ require 'sprout'
 sprout 'as3'
 
 require 'tasks/flashplayer_redgreen_task'
+#require 'tasks/rubyforge'
+require 'tasks/sprout'
 
 ############################################
 # Configure your Project Model
@@ -56,55 +59,21 @@ swc :swc
 task :default => :debug
 
 
-task :sprout => [ :swc, :gemspec, :build ]
 
-# gem_wrap :as3spec do |t|
-#   t.version       = '0.1.0'
-#   t.summary       = "AsUnit3 is an ActionScript unit test framework for AIR, Flex 2/3 and ActionScript 3 projects"
-#   t.author        = "Luke Bayes and Ali Mills"
-#   t.email         = "projectsprouts@googlegroups.com"
-#   t.homepage      = "http://www.asunit.org"
-#   t.sprout_spec   =<<EOF
-# - !ruby/object:Sprout::RemoteFileTarget 
-#   platform: universal
-#   url: http://projectsprouts.googlecode.com/files/asunit3-1.1.zip
-#   source_path: ''
-# EOF
-# end
-
-
-
-
-# build gem
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "sprout-as3spec-library"
-    gem.summary = %Q{AS3Spec is a tiny BDD framework for AS3, inspired by Bacon and RSpec. Built upon sprout project-generation tool for ActionScript/Flash/Flex/AIR.}
-    gem.description = %Q{AS3Spec is a tiny BDD framework for AS3, inspired by Bacon and RSpec. Built upon sprout project-generation tool for ActionScript/Flash/Flex/AIR.}
-    gem.email = "disinnovate@gmail.com"
-    gem.homepage = "http://github.com/disinnovate/as3spec"
-    gem.authors = [ "Michael Fleet" ]
-		gem.executables = []
-		gem.files = FileList['sprout.spec']
-		gem.extra_rdoc_files = []
-		gem.require_path = '.'
-#		gem.add_dependency('sprout', '>= 0.7.206')
-		gem.rubyforge_project = 'as3spec'
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
-  end
-
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+# package .swc as .zip
+Rake::PackageTask.new(Rake.application.jeweler.gemspec.name, Rake.application.jeweler.version) do |p|
+	p.need_zip = true
+	p.package_files.include("#{model.bin_dir}/#{model.project_name}.swc")
 end
 
-# publish gem to rubyforge
-begin
-  require 'rake/contrib/sshpublisher'
-  namespace :rubyforge do
-    desc "Release gem and RDoc documentation to RubyForge"
-    task :release => ["rubyforge:release:gem"]
+# generate sprout.spec
+task :sprout_spec do |t|
+  File.open('sprout.spec', 'w') do |f|
+    f.write <<EOF
+- !ruby/object:Sprout::RemoteFileTarget
+  platform: universal
+  url: http://cloud.github.com/downloads/disinnovate/as3spec/as3spec.swc.zip
+  archive_path: '#{Rake.application.jeweler.gemspec.name}-#{Rake.application.jeweler.version}/#{model.bin_dir}/#{model.project_name}.swc'
+EOF
   end
-rescue LoadError
-  puts "Rake SshDirPublisher is unavailable or your rubyforge environment is not configured."
 end

@@ -29,7 +29,20 @@
 **** runner
 
 NOTES:
-- "pkg/sprout-as3spec-library.gem" is a gem containing a *single file* called "sprout.spec"
+- "pkg/sprout-as3spec-library.gem-VERSION" is a gem containing a *single file* called "sprout.spec"
 - "sprout.spec" is a text file which gives Sprout the URL to "as3spec.swc.zip"
 - "bin/as3spec.swc.zip" is a ZIP file containing a *single file* called "as3spec.swc"
 - "bin/as3spec.swc" is a compiled SWC of as3spec
+
+WORKFLOW:
+- Hack, commit, hack, commit, etc, etc
+- "rake version:bump:patch"
+- "rake sprout" to
+-- compile bin/as3spec.swc
+-- compress bin/as3spec.swc as bin/as3spec.swc.zip
+-- generate sprout.spec
+-- generate sprout-as3spec-library.gemspec
+-- package pkg/sprout-as3spec-library-VERSION.gem
+-- upload .swc.zip to github or rubyforge public URL
+- verify all new builds
+- rake release rubyforge:release
