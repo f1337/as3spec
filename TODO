@@ -43,6 +43,6 @@ WORKFLOW:
 -- generate sprout.spec
 -- generate sprout-as3spec-library.gemspec
 -- package pkg/sprout-as3spec-library-VERSION.gem
--- upload .swc.zip to github or rubyforge public URL
+-- upload .swc.zip to http://as3spec.rubyforge.org/sprout-as3spec-library-VERSION.zip
 - verify all new builds
 - rake release rubyforge:release

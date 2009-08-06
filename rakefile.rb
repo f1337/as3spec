@@ -6,7 +6,7 @@ require 'sprout'
 sprout 'as3'
 
 require 'tasks/flashplayer_redgreen_task'
-#require 'tasks/rubyforge'
+require 'tasks/rubyforge'
 require 'tasks/sprout'
 
 ############################################
@@ -63,6 +63,7 @@ task :default => :debug
 # package .swc as .zip
 Rake::PackageTask.new(Rake.application.jeweler.gemspec.name, Rake.application.jeweler.version) do |p|
 	p.need_zip = true
+#	p.package_dir = 'gh-pages'
 	p.package_files.include("#{model.bin_dir}/#{model.project_name}.swc")
 end
 
@@ -72,7 +73,7 @@ task :sprout_spec do |t|
     f.write <<EOF
 - !ruby/object:Sprout::RemoteFileTarget
   platform: universal
-  url: http://cloud.github.com/downloads/disinnovate/as3spec/as3spec.swc.zip
+  url: http://as3spec.rubyforge.org/#{Rake.application.jeweler.gemspec.name}-#{Rake.application.jeweler.version}.zip
   archive_path: '#{Rake.application.jeweler.gemspec.name}-#{Rake.application.jeweler.version}/#{model.bin_dir}/#{model.project_name}.swc'
 EOF
   end

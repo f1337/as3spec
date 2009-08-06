@@ -7,7 +7,13 @@ end
 
 
 # sprout build task: builds "sprout-as3spec-library.gem"
-task :sprout => [ :swc, :package, :sprout_spec, 'sprout:gemspec', 'sprout:build' ]
+# :swc 												=> compiles as3spec AS classes into .swc
+# :package										=> creates pkg/.swc.zip for sprouts
+# :sprout_spec								=> generates sprout-library manifest file
+# :sprout:gemspec 						=> generates sprout-library gem spec
+# :sprout:build								=> builds pkg/sprout-library gem
+# :rubyforge:release:sprout 	=> uploads zipfile to rubyforge
+task :sprout => [ :swc, :package, :sprout_spec, 'sprout:gemspec', 'sprout:build', 'rubyforge:release:sprout' ]
 
 
 # build gem with Jeweler in "sprout" namespace
