@@ -26,7 +26,7 @@ package as3spec
         for each(var specification:Specification in counter.contexts[countName]) {
           trace('<testcase classname="'+countName+"."+specification.story+'" name="'+specification.story+'" time="'+(specification.time/1000)+'">');
           if(specification.failure!=null) {
-            trace('<failure>'+specification.failure+'</failure>');
+            trace('<failure type="'+specification.failureType+'"><![CDATA['+specification.failure+']]></failure>');
           }
           trace('</testcase>');
         }
