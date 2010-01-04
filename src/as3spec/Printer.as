@@ -20,7 +20,7 @@ package as3spec
 		  
 		  trace("<XMLResultPrinter>");
       trace("<?xml version='1.0' encoding='UTF-8'?>");
-      trace("<testsuites>");
+      //trace("<testsuites>");
       trace("<testsuite name='AllSpecs' errors='" + counter.errors + "' failures='" + counter.failures + "' tests='" + counter.specifications + "' time='" + (counter.time/1000) + "'>");
       for(var countName:String in counter.contexts) {
         for each(var specification:Specification in counter.contexts[countName]) {
@@ -28,7 +28,7 @@ package as3spec
         }
       }
       trace("</testsuite>");
-      trace("</testsuites>");
+      //trace("</testsuites>");
       trace("</XMLResultPrinter>");
         
 		}
