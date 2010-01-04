@@ -11,6 +11,7 @@ package as3spec
     public var printer:Printer;
     public var story:String;
     public var time:Number;
+    public var failure:String=null;
     
 		public function Specification (printer:Printer)
 		{
@@ -31,17 +32,20 @@ package as3spec
 			catch (error:Error)
 			{
 				status = (error.name == 'FAILED' ? 'FAILED' : 'ERROR');
-				counter.stacktraces.push(error.getStackTrace());
+				failure=error.getStackTrace();
+				counter.stacktraces.push(failure);
 			}
 			catch (exception:*)
 			{
 				status = 'FAILED';
+				failure=exception.getStackTrace();
 			}
 			finally
 			{
 				if (requirements.length < 1)
 				{
 					status = 'MISSING';
+					failure = 'MISSING';
 					counter.missing++;
 				}
 				if (status == 'FAILED') counter.failures++;
