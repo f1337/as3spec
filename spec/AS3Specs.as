@@ -3,7 +3,7 @@ package
 	import as3spec.*;
 	import flash.utils.*;
 
-	public class TestAS3Spec extends Spec
+	public class AS3Specs extends Spec
 	{
 		public function run () :void
 		{

@@ -7,7 +7,7 @@
     	<![CDATA[
 			public function runTests() :void
 			{
- 				new SpecSuite().run();
+ 				new SpecSuiteXML().run();
 			}
     	]]>
     </mx:Script>

@@ -4,7 +4,7 @@ package
 	import mx.controls.*;
 	import mx.core.*;
 
-	public class TestUIComponentSpec extends UIComponentSpec
+	public class UIComponentSpecs extends UIComponentSpec
 	{
 		public function run () :void
 		{

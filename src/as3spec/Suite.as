@@ -13,20 +13,25 @@ package as3spec
 			failures:		0,
 			errors:			0,
 			missing:		0,
-			stacktraces:	[]
+			time:       0,
+			stacktraces:	[],
+			contexts: []
 		};
 
 		// FIFO queue
 		private var specs:Array = [];
+		private var numSpecs:int=0;
 		// delay exit(): allow running specs to complete
 		private var timer:Timer = new Timer(1500, 1);
-
+		public var printer:Printer;
+		
 		public function run (...args) :void
 		{
 			if (specs.length < 1) return exit();
-
 			var spec:* = new (specs.pop())();
+			spec.printer=printer;
 			spec.addEventListener('complete', run);
+			spec.addEventListener('specComplete', specCompleted);
 			spec.run();
 		}
 
@@ -34,10 +39,23 @@ package as3spec
 		{
 			specs.unshift(spec);
 		}
+		
+		private function specCompleted(e:Object = null) :void {
+		  trace('specCompleted');
+		}
+		
+		private function calculateTime() : void {
+		  for(var countName:String in counter.contexts) {
+        for each(var specification:Specification in counter.contexts[countName]) {
+          counter.time+=specification.time;
+        }
+      }
+		}
 
 		private function summarize () :void
 		{
 			// 50 specifications (380 requirements), 1 failures, 1 errors
+			calculateTime();
 			trace('');
 			trace(counter.stacktraces.join("\n\n"));
 			trace('');
@@ -46,9 +64,11 @@ package as3spec
 				counter.requirements + ' requirements), ' + 
 				counter.failures + ' failures, ' + 
 				counter.errors + ' errors, ' +
-				counter.missing + ' pending'
+				counter.missing + ' pending, ' +
+				'time: ' + counter.time/1000 + ' seconds' 
 			);
-			Spec.puts(summary);
+			printer.puts(summary);
+			printer.xputs(counter);
 		}
 
 		private function exit (e:Object = null) :void

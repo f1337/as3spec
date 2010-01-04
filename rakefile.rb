@@ -17,7 +17,8 @@ model = project_model :model do |m|
   m.background_color        = '#FFFFFF'
   m.width                   = 970
   m.height                  = 550
-  m.test_output							= "#{m.bin_dir}/as3specRunner.swf"
+  m.spec_output							= "#{m.bin_dir}/as3specRunner.swf"
+  m.spec_xml_output					= "#{m.bin_dir}/as3specXMLRunner.swf"
   # m.use_fdb               = true
   # m.use_fcsh              = true
   # m.preprocessor          = 'cpp -D__DEBUG=false -P - - | tail -c +3'
@@ -26,7 +27,7 @@ model = project_model :model do |m|
   # m.lib_dir               = 'lib'
   # m.swc_dir               = 'lib'
   # m.bin_dir               = 'bin'
-  # m.test_dir              = 'test'
+  m.spec_dir              = 'spec'
   # m.doc_dir               = 'doc'
   # m.asset_dir             = 'assets'
   # m.compiler_gem_name     = 'sprout-flex4sdk-tool'
@@ -38,13 +39,37 @@ end
 desc 'Compile and debug the application'
 debug :debug
 
-desc 'Compile run the test harness'
-flashplayer :test => model.test_output
-mxmlc model.test_output => :model do |t|
-	t.debug				 = true
-	t.input				 = "#{model.src_dir}/as3specRunner.mxml"
-	t.source_path << model.test_dir
+flashplayer :spec_run => model.spec_output
+mxmlc model.spec_output => :model do |t|
+	t.debug				  = true
+	t.input				  = "#{model.src_dir}/as3specRunner.mxml"
+	t.source_path   << model.spec_dir
 end
+
+desc 'Compile run the test harness'
+task :spec => :spec_run
+
+
+mxmlc model.spec_xml_output => :model do |t|
+	t.debug         = true
+	t.input         = "#{model.src_dir}/as3specXMLRunner.mxml"
+	t.source_path   << model.spec_dir
+end
+
+fdb :cruise_run => model.spec_xml_output do |t|
+  t.file          = model.spec_xml_output
+	t.kill_on_fault = true
+	t.run
+	## here we do some stuff to get flex projects working
+	t.continue 
+  t.sleep_until(/fdb/) 
+	# You can set breakpoints in here like:
+  # t.break = 'as3specXMLRunner:13'
+	t.continue
+end
+
+desc 'Compile and run the CI task'
+task :cruise => [:clean, :cruise_run]
 
 desc 'Compile the optimized deployment'
 deploy :deploy
