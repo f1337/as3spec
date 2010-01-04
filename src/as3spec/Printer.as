@@ -24,7 +24,7 @@ package as3spec
       trace("<testsuite name='AllSpecs' errors='" + counter.errors + "' failures='" + counter.failures + "' tests='" + counter.specifications + "' time='" + (counter.time/1000) + "'>");
       for(var countName:String in counter.contexts) {
         for each(var specification:Specification in counter.contexts[countName]) {
-          trace("<testcase classname='"+countName+'.'+specification.story"' name='"+specification.story+"' time='"+(specification.time/1000)+"'></testcase>");
+          trace("<testcase classname='"+countName+'.'+specification.story+"' name='"+specification.story+"' time='"+(specification.time/1000)+"'></testcase>");
         }
       }
       trace("</testsuite>");
