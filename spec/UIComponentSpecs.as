@@ -10,7 +10,7 @@ package
 		{
 			const instance:UIComponent = new Button;
 
-			describe (instance, 'is a component from the mx.controls package', function () :void
+			describe (instance, 'is a component from the mx\.controls package', function () :void
 			{
 				it ('should be a UIComponent', function () :void
 				{
