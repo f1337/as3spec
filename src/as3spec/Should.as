@@ -54,6 +54,21 @@ package as3spec
 			return eval((this.value == value), 'equal', value);
 		}
 
+    // be more than
+    // should be.more_than(value:*)
+    public function more_than(value:*) :Boolean
+    {
+      return eval((this.value > value), 'more than', value);
+    }
+    
+    // be less than
+    // should be.less_than(value:*)
+    public function less_than(value:*) :Boolean
+    {
+      return eval((this.value < value), 'less than', value);
+    }
+
+
 		// is Type
 		// should.be.a.kind_of(Object)
 		public function kind_of (klass:*) :Boolean
