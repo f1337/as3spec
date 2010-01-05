@@ -3,6 +3,7 @@ package as3spec
 	import as3spec.*;
 	import flash.events.*;
 	import flash.system.*;
+	import flash.utils.Timer;
 
 	public class Spec extends EventDispatcher
 	{
@@ -11,7 +12,9 @@ package as3spec
 
 		public var describe:Function = context;
 		public var printer:Printer;
-
+		public var asyncTime:Number=0;
+    private var asyncTimer:Timer;
+    
 		public function context (...args) :void
 		{
 			if (args.length < 2) throw('invalid arguments for describe()');
@@ -30,6 +33,19 @@ package as3spec
 			  dispatchEvent(new Event('complete'));
 		  } else {
 		    dispatchEvent(new Event('specComplete'));
+		  }
+		}
+		
+		public function run() : void{}
+		public function runLater(e:*=null) : void{}
+		
+		
+		public function _run() : void {
+		  run();
+		  if(asyncTime>0) {
+		    asyncTimer = new Timer(asyncTime, 1);
+		    asyncTimer.addEventListener('timerComplete', runLater);
+		    asyncTimer.start();
 		  }
 		}
 

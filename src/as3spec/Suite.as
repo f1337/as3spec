@@ -22,8 +22,14 @@ package as3spec
 		private var specs:Array = [];
 		private var numSpecs:int=0;
 		// delay exit(): allow running specs to complete
-		private var timer:Timer = new Timer(1500, 1);
+		public var asyncTime:Number = 2000;
+		private var timer:Timer;
 		public var printer:Printer;
+		
+		public function Suite():void
+		{
+		  timer = new Timer(asyncTime, 1);
+		}
 		
 		public function run (...args) :void
 		{
@@ -32,7 +38,7 @@ package as3spec
 			spec.printer=printer;
 			spec.addEventListener('complete', run);
 			spec.addEventListener('specComplete', specCompleted);
-			spec.run();
+			spec._run();
 		}
 
 		protected function add (spec:Class) :void
@@ -41,7 +47,7 @@ package as3spec
 		}
 		
 		private function specCompleted(e:Object = null) :void {
-		  trace('specCompleted');
+		  //trace('specCompleted');
 		}
 		
 		private function calculateTime() : void {
@@ -76,7 +82,11 @@ package as3spec
 			// delay exit() to allow running specs time to complete
 			if (e == null)
 			{
-				timer.addEventListener('timerComplete', exit);
+			  if(timer.running) {
+				  timer.reset();
+				} else {
+				  timer.addEventListener('timerComplete', exit);
+				}
 				timer.start();
 			}
 			// done waiting, summarize and exit

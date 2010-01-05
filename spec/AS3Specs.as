@@ -5,8 +5,13 @@ package
 
 	public class AS3Specs extends Spec
 	{
-		public function run () :void
+	  private var ts:Number;
+	  
+		override public function run () :void
 		{
+		  asyncTime=1000;
+		  ts=getTimer();
+		  
 			describe ('as3spec', function () :void
 			{
 				const arr:Array = new Array;
@@ -152,6 +157,17 @@ package
 				specify ('should support therefore()', function () :void
 				{
 					therefore(true).should.equal(true);
+				});
+			});
+		}
+		
+		override public function runLater(e:*=null):void
+		{
+		  describe ('AS3Specs runLater', function () :void
+			{
+				it ('should run more than 1 second later than AS3Specs run()', function () :void
+				{
+					so(getTimer()-ts).should.be.more_than(1000);
 				});
 			});
 		}

@@ -6,7 +6,7 @@ package
 
 	public class UIComponentSpecs extends UIComponentSpec
 	{
-		public function run () :void
+		override public function run () :void
 		{
 			const instance:UIComponent = new Button;
 
