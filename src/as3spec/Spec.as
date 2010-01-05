@@ -36,17 +36,30 @@ package as3spec
 		  }
 		}
 		
-		public function run() : void{}
-		public function runLater(e:*=null) : void{}
+		/// override if needed
 		
+		public function before() : void{}
+		public function after() : void{}
+		public function run() : void{}
+		public function runLater() : void{}
+		
+		///
 		
 		public function _run() : void {
+		  before();
 		  run();
 		  if(asyncTime>0) {
 		    asyncTimer = new Timer(asyncTime, 1);
-		    asyncTimer.addEventListener('timerComplete', runLater);
+		    asyncTimer.addEventListener('timerComplete', _runLater);
 		    asyncTimer.start();
+		  } else {
+		    after();
 		  }
+		}
+		
+		private function _runLater(e:*=null) : void {
+		  runLater();
+		  after();
 		}
 
 		public var it:Function = specify;

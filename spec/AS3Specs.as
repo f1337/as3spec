@@ -7,6 +7,21 @@ package
 	{
 	  private var ts:Number;
 	  
+	  override public function before():void
+	  {
+	   asyncTime=1000;
+	   ts=getTimer();
+	   
+	   describe ('AS3Specs before setup', function () :void
+	    {
+	      it ('should run before all other specs run', function () :void
+	      {
+	        so(true).should.equal(true);
+	      });
+	    });
+	   
+	  }
+	  
 		override public function run () :void
 		{
 		  asyncTime=1000;
@@ -161,7 +176,7 @@ package
 			});
 		}
 		
-		override public function runLater(e:*=null):void
+		override public function runLater():void
 		{
 		  describe ('AS3Specs runLater', function () :void
 			{
@@ -171,5 +186,17 @@ package
 				});
 			});
 		}
+		
+		override public function after():void
+	  {
+	    describe ('AS3Specs after cleanup', function () :void
+	    {
+	      it ('should run after all other specs have run', function () :void
+	      {
+	        so(true).should.equal(true);
+	      });
+	    });
+	  }
+		
 	}
 }
