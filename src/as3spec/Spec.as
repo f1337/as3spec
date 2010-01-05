@@ -53,6 +53,7 @@ package as3spec
 		    asyncTimer.addEventListener('timerComplete', _runLater);
 		    asyncTimer.start();
 		  } else {
+		    runLater();
 		    after();
 		  }
 		}
