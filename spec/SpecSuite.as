@@ -6,9 +6,7 @@ package
 	{
 		public function SpecSuite ()
 		{
-		  printer = new Printer;
 			add(AS3Specs);
-			add(UIComponentSpecs);
 		}
 	}
 }

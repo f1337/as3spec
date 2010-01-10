@@ -2,201 +2,160 @@ package
 {
 	import as3spec.*;
 	import flash.utils.*;
+  import flash.events.*;
+
 
 	public class AS3Specs extends Spec
 	{
-	  private var ts:Number;
+	  private var nothing:String;
+	  private var arr:Array;
+	  private var myTimer1:Timer;
+	  private var myTimer2:Timer;
+	  private var myTimer3:Timer;
+	  private var myTimer4:Timer;
+	  private var myObject:Object;
 	  
 	  override public function before():void
 	  {
-	   asyncTime=1000;
-	   ts=getTimer();
-	   
-	   describe ('AS3Specs before setup', function () :void
-	    {
-	      it ('should run before all other specs run', function () :void
-	      {
-	        so(true).should.equal(true);
-	      });
-	    });
-	   
+	   arr=new Array;
+	   myTimer1=new Timer(1000, 1);
+	   myTimer2=new Timer(1000, 1);
+	   myTimer3=new Timer(1000, 1);
+	   myTimer4=new Timer(1000, 1);
+	   myObject={};
+	  }
+	  
+	  
+		
+		override public function after():void
+	  {
+	    myTimer1.stop();
+	    myTimer2.stop();
+	    myTimer3.stop();
 	  }
 	  
 		override public function run () :void
 		{
-		  asyncTime=1000;
-		  ts=getTimer();
 		  
 			describe ('as3spec', function () :void
 			{
-				const arr:Array = new Array;
+				
+				it ('provides should.equal').so(23).should.equal(23);
+				it ('provides should.not.equal').so(23).should.not.equal(12);
+				it ('provides should.be.same').so(arr).should.be.same_as(arr);
+        it ('provides should.not.be.same').so(arr).should.not.be.same_as((new Array));
+        it ('provides should.be.nil').so(nothing).should.be.nil;
+        it ('provides should.not.be.nil').so(arr).should.not.be.nil;
+				it ('provides should.have').so(arr).should.have('length');
+				it ('provides should.not.have').so(arr).should.not.have('kittens');
+        it ('provides should.match').so('hello').should.match(/ell/);
+        it ('provides should.not.match').so('hello').should.not.match(/egg/);
+        it ('provides should.be.a.kind_of').so(arr).should.be.a.kind_of(Array);
+        it ('provides should.not.be.a.kind_of').so(arr).should.not.be.a.kind_of(Boolean);
+        
+        it ('provides should.raise(message)')
+          .so(function() :void
+          {
+            throw('an error');
+          })
+          .should.raise('an error');
+          
+				it ('provides should.not.raise(message)')
+				  .so(function() :void
+				  {
+				    //nothing here
+				  })
+				  .should.not.raise('an error');
 
-				it ('provides should.equal and should.not.equal', function () :void
-				{
-					// ==
-					so(23).should.equal(23);
-					// !=
-					so(23).should.not.equal(15);
-				});
-
-				it ('provides should.be.same and should.not.be.same', function () :void
-				{
-					// ===
-					so(arr).should.be.same(arr);
-					// !==
-					so(arr).should.not.be.same((new Array));
-				});
-
-				it ('provides should.be.nil and should.not.be.nil', function () :void
-				{
-					// == null
-					var nothing:String;
-					so(nothing).should.be.nil;
-					// != null
-					so(arr).should.not.be.nil;
-				});
-
-				it ('provides should.have and should.not.have', function () :void
-				{
-					so(arr).should.have('length');
-					so(arr).should.not.have('kittens');
-				});
-
-				it ('provides should.match and should.not.match', function () :void
-				{
-					// =~
-					so('hello').should.match(/ell/);
-					// !=~
-					so('hello').should.not.match(/egg/);
-				});
-
-				it ('provides should.be.a.kind_of and should.not.be.a.kind_of', function () :void
-				{
-					// "var is Type"
-					so(arr).should.be.a.kind_of(Array);
-					so(arr).should.not.be.a.kind_of(Boolean);
-				});
-
-				it ('provides should.raise(message) and should.not.raise(message)', function () :void
-				{
-					// throws
-					so(function () :void
-					{
-						throw('an error');
-					}).should.raise('an error');
-					so(function () :void
-					{
-						// do nothing
-					}).should.not.raise('an error');
-				});
-
-				it ('provides should.raise(class) and should.not.raise(class)', function () :void
-				{
-					// throws
-					so(function () :void
+				it ('provides should.raise(class)')
+					.so(function () :void
 					{
 						throw(new Error('an error'));
-					}).should.raise(Error);
-					so(function () :void
+					})
+					.should.raise(Error);
+				
+				it('provides should.not.raise(class)')
+				  .so(function () :void
 					{
 						// do nothing
-					}).should.not.raise(Error);
-				});
-
-				it ('provides should.raise() and should.not.raise()', function () :void
-				{
-					// throws
-					so(function () :void
+					})
+					.should.not.raise(Error);
+        
+        it ('provides should.raise()')
+          .so(function () :void
 					{
 						throw(new Error('an error'));
 					}).should.raise();
-					so(function () :void
-					{
-						// do nothing
-					}).should.not.raise();
-				});
-
-				it ('provides should.trigger and should.not.trigger', function () :void
+					
+				it ('provides should.not.raise()')
+				  .so(function () :void
+  				{
+  					// do nothing
+  				}).should.not.raise();
+        
+				
+				it ('provides should.not.trigger')
+				  .so(myTimer1).should.not.trigger('timer');
+				  
+				it ('provides should.trigger', function() :void
 				{
-					var t:Timer = new Timer(1000);
-					so(t).should.not.trigger('timer');
-					t.addEventListener('timer', function () :void {});
-					so(t).should.trigger('timer');
-				});
-
-				it ('catches an empty specification', function () :void
-				{
-				});
+				  myTimer1.addEventListener('timer', function(t:*) : void {});
+				})
+				  .so(myTimer1).should.trigger('timer');
+				
+				
+				it ('provides after(time).second', function() :void {
+			      setTimeout(function(t:*=null) :void{ myObject.myVal=5234 }, 900);
+			    })
+				  .so(myObject, 'myVal')
+				  .after(1).second
+				  .should.equal(5234);
+				
+				it ('provides after(time).seconds', function() :void {
+			      setTimeout(function(t:*=null) :void{ myObject.myVal=2255 }, 300);
+			    })
+				  .so(myObject, 'myVal')
+				  .after(0.5).seconds
+				  .should.equal(2255);
+			  
+			  it('provides when.receiving(event)', function() :void
+		    {
+		      myTimer2.start();
+		    })    
+		      .so(myTimer2)
+            .when.receiving(TimerEvent.TIMER)
+            .should.be.same_as(myTimer2);
+            
+			  
+				it('provides when.receiving(event).from(object)', function() :void
+		    {
+		      myTimer3.start();
+		    })    
+		      .so(123)
+            .when.receiving(TimerEvent.TIMER).from(myTimer3)
+            .should.be.equal_to(123);
 
 				it ('catches an error', function () :void
 				{
-					so(arr);
 					throw(new Error('catch me if you can!'));
-				});
+				}).so(arr);
 
-				it ('catches a failure', function () :void
+				it ('catches a failure')
+				  .so(23).should.equal(15);
+				  
+				timeout = 500;
+				it ('can time out', function() :void
 				{
-					so(23).should.equal(15);
-				});
+				  myTimer4.start();
+				})
+				  .so(123)
+				    .when.receiving(TimerEvent.TIMER).from(myTimer4)
+				    .should.be.equal_to(123);
 
-
-				describe ('with a nested describe() block', function () :void
-				{
-					it ('should succeed', function () :void
-					{
-						so(true).should.equal(true);
-					});
-				});
 			});
 
-			describe ('describe()', 'with', 'arbitrary', 'arguments', function () :void
-			{
-				it ('should succeed', function () :void
-				{
-					so(true).should.equal(true);
-				});
-			});
-
-			context ('context()', function () :void
-			{
-				specify ('should support specify() and require()', function () :void
-				{
-					require(true).should.equal(true);
-				});
-
-				specify ('should support expect()', function () :void
-				{
-					expect(true).should.equal(true);
-				});
-
-				specify ('should support therefore()', function () :void
-				{
-					therefore(true).should.equal(true);
-				});
-			});
+			
 		}
-		
-		override public function runLater():void
-		{
-		  describe ('AS3Specs runLater', function () :void
-			{
-				it ('should run more than 1 second later than AS3Specs run()', function () :void
-				{
-					so(getTimer()-ts).should.be.more_than(1000);
-				});
-			});
-		}
-		
-		override public function after():void
-	  {
-	    describe ('AS3Specs after cleanup', function () :void
-	    {
-	      it ('should run after all other specs have run', function () :void
-	      {
-	        so(true).should.equal(true);
-	      });
-	    });
-	  }
 		
 	}
 }

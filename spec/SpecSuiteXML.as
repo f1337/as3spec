@@ -6,11 +6,9 @@ package
 	{
 		public function SpecSuiteXML ()
 		{
-		  printer = new Printer;
-		  printer.printXML = true;
-		  printer.printTrace = false;
+		  ci_output=true;
+		  trace_output=false;
 			add(AS3Specs);
-			add(UIComponentSpecs);
 		}
 	}
 }

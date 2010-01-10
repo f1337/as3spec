@@ -1,81 +1,178 @@
 package as3spec
 {
-	import as3spec.*;
-	import flash.events.*;
-	import flash.system.*;
-	import flash.utils.Timer;
-
-	public class Spec extends EventDispatcher
-	{
-		// LIFO stack: most recent context at [0]
-		static private var contexts:Array = [];
-
-		public var describe:Function = context;
-		public var printer:Printer;
-		public var asyncTime:Number=0;
-    private var asyncTimer:Timer;
+  import flash.system.*;
+  import flash.events.*;
+  
+  public class Spec extends SpecBase{
     
-		public function context (...args) :void
-		{
-			if (args.length < 2) throw('invalid arguments for describe()');
-
-			var block:Function = (args.pop() as Function);
-			if (block == null) throw('describe() expects function() block');
-
-			var context:String = args.join(' ');
-      
-			contexts.unshift(new Context(context, printer));
-			contexts[0].describe(block);
-			contexts.shift();
-
-			// tell Suite this Spec is done, move on to the next!
-			if (contexts.length == 0) {
-			  dispatchEvent(new Event('complete'));
-		  } else {
-		    dispatchEvent(new Event('specComplete'));
-		  }
-		}
-		
-		/// override if needed
-		
-		public function before() : void{}
+    public static const COMPLETE : String = 'specComplete';
+    
+    // >>> PRIVATE PROPERTIES
+    private var contexts        : Array;
+    private var currentContext  : Object;
+    private var should          : Should;
+    
+    // >>> PRIVATE GETTER/SETTER PROPERTIES
+    private var _specifications         : int = 0;
+    private var _successes              : int = 0;
+    private var _failures               : int = 0;
+    private var _errors                 : int = 0;
+    private var _timeouts               : int = 0;
+    
+    private var _timeout                : Number = -1;
+    
+    
+    public function get successes() : int { 
+      return _successes; 
+    }
+    
+    public function get failures() : int { 
+      return _failures; 
+    }
+    
+    public function get specifications() : int { 
+      return _specifications; 
+    }
+    
+    public function get errors() : int { 
+      return _errors; 
+    }
+    
+    public function get timeouts() : int { 
+      return _timeouts; 
+    }
+    
+    public function set timeout(value:Number) : void { 
+      _timeout = value; 
+    }
+    
+    public function get timeout() : Number { 
+      return _timeout; 
+    }
+    
+    //---- override these
+    public function before() : void{}
 		public function after() : void{}
 		public function run() : void{}
-		public function runLater() : void{}
+		//----
 		
-		///
-		
-		public function _run() : void {
-		  before();
-		  run();
-		  if(asyncTime>0) {
-		    asyncTimer = new Timer(asyncTime, 1);
-		    asyncTimer.addEventListener('timerComplete', _runLater);
-		    asyncTimer.start();
-		  } else {
-		    runLater();
-		    after();
-		  }
-		}
-		
-		private function _runLater(e:*=null) : void {
-		  runLater();
-		  after();
-		}
-
-		public var it:Function = specify;
-		public function specify (story:String, block:Function) :void
+		public var describe:Function = context;
+		public function context (description:String, block:Function) :void
 		{
-		  if(contexts[0].printer==null) contexts[0].printer=printer;
-			contexts[0].specify(story, block);
+		  currentContext = { description: description, specs: [] };
+		  if(contexts == null) contexts = [];
+		  contexts.push(currentContext);
+		  block.apply();
 		}
-
+		
+		
+		public var it:Function = specify;
+		public function specify (story:String, block:Function=null) :Spec {
+		  _specifications++;
+		  
+		  should=new Should();
+		  should.story=story;
+		  
+		  should.specify = (block==null) ? 
+		    function() : void{} :
+		    block;
+		  
+		  if(timeout>-1) should.timeout = timeout;
+		  
+		  return this;
+		}
+		
 		public var expect:Function = require;
 		public var so:Function = require;
 		public var therefore:Function = require;
-		public function require (value:*) :Should
+		public function require (... args) :Should
 		{
-			return contexts[0].require(value);
+		  if(args.length>1) {
+		    
+		    should.object=args[0];
+		    should.property=args[1];
+		  
+		  } else {
+		    
+		    should.value=args[0];
+		  
+		  }
+		  currentContext.specs.push(should);
+	    return should;
 		}
-	}
+		
+		private function next() : void {
+		  
+		  if(contexts.length<=0 && currentContext.specs.length<=0) {
+		    cleanup();
+		    return;
+	    }
+		  
+		  if(currentContext==null || currentContext.specs.length==0) {
+		    currentContext=contexts.shift();
+		    Printer.printer.description(currentContext.description);
+	    }
+		  
+		  should = currentContext.specs.shift() as Should;
+		  
+		  should.addEventListener(ResultEvent.SUCCESS, testSuccess);
+		  should.addEventListener(ResultEvent.FAILED, testFailure);
+		  should.addEventListener(ResultEvent.ERROR, testError);
+		  should.addEventListener(ResultEvent.TIMEOUT, testTimeout);
+		  should.run();
+		}
+		
+		private function testError(re:ResultEvent) : void {
+		  _errors++;
+		  removeListeners();
+		  Printer.printer.specification(re.story, re.type, re.time, re.error);
+		  next();
+		}
+		
+		private function testSuccess(re:ResultEvent) : void {
+		  _successes++;
+		  removeListeners();
+		  Printer.printer.specification(re.story, re.type, re.time);
+		  next();
+		}
+
+    private function testFailure(re:ResultEvent) : void {
+      _failures++;
+      removeListeners();
+      Printer.printer.specification(re.story, re.type, re.time, re.error);
+      next();
+    }
+    
+    private function testTimeout(re:ResultEvent) : void {
+      _timeouts++;
+      removeListeners();
+      Printer.printer.specification(re.story, re.type, re.time, re.error);
+      next();
+    }
+
+    private function removeListeners() : void {
+      if(should==null) return;
+      should.removeEventListener(ResultEvent.SUCCESS, testSuccess);
+      should.removeEventListener(ResultEvent.FAILED, testFailure);
+      should.removeEventListener(ResultEvent.ERROR, testError);
+      should.removeEventListener(ResultEvent.TIMEOUT, testTimeout);
+    }
+    
+    protected function cleanup() : void {
+      after();
+      stopTimer();
+      dispatchEvent(new Event(Spec.COMPLETE));
+    }
+    public function begin() : void {
+      contexts=[];
+      startTimer();
+      before();
+      run();
+      currentContext=null;
+      next();
+    }
+
+  }
+
+
 }
