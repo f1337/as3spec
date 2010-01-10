@@ -2,34 +2,145 @@ package as3spec
 {
 	import as3spec.*;
 	import flash.events.*;
+  import flash.utils.*;
 
-	public class Should extends EventDispatcher
+	public class Should extends SpecBase
 	{
 		// >>> PRIVATE PROPERTIES
 		private var positive:Boolean = true;
-		private var value:*;
+		private var eventObject:* = null;
+		private var async:Boolean = false;
+		private var noValue:Boolean = false;
+		private var expectedValue:*;
+		private var event:String;
+		private var matcher:Function;
+		private var timer:Timer;
+		private var didTimeout:Boolean = false;
+		
+		// >>> PRIVATE GETTER/SETTER PROPERTIES
+		private var _value:*;
+		private var _object:* = null;
+		private var _property:* = null;
+		private var _story:String;
+		private var _timeout:Number = 10000;
+		private var _specify:Function;
 
-		public function Should (value:*)
-		{
-			this.value = value;
-		}
 
 		// should.be
 		// should.be.a
 		// should.be.an
 		public function get a  () :Should { return be; }
 		public function get an () :Should { return be; }
+		//public function get as () :Should { return be; }
+		public function get to () :Should { return be; }
 		public function get be () :Should
 		{
 			return this;
 		}
+		
+		// so(object, 'value').when.receiving('eventName').should.equal(5)
+		public function receiving(event:String) : Should {
+		  this.event = event;
+		  if(object == null && value is Object) object = value;
+		  if(object is EventDispatcher) object.addEventListener(this.event, eventReceived);
+		  timer=new Timer(timeout, 1);
+		  timer.addEventListener(TimerEvent.TIMER, timeoutReached);
+		  return this;
+		}
+		
+		public function from(eventObject:*) : Should {
+		  this.eventObject = eventObject;
+		  if(object is EventDispatcher) object.removeEventListener(this.event, eventReceived);
+		  if(this.eventObject is EventDispatcher) this.eventObject.addEventListener(this.event, eventReceived);
+		  return this;
+		}
+		
+		private function eventReceived(e:*=null) : void {
+		  timer.stop();
+		  timer.removeEventListener(TimerEvent.TIMER, timeoutReached);
+		  
+		  if(this.eventObject is EventDispatcher) {
+		    this.eventObject.removeEventListener(this.event, eventReceived);
+		  } else if(object is EventDispatcher){
+		    object.removeEventListener(this.event, eventReceived); 
+		  }
+		  
+		  async=false;
+		  run();
+		}
+		
+		private function timeoutReached(e:*=null) : void {
+		  didTimeout=true;
+		  eventReceived();
+		}
+		
+		public function get when() :Should {
+		  async=true;
+		  return this;
+		}
+		
+		public function get second() : Should { 
+		  return seconds;
+		}
+		
+		public function get seconds() : Should { 
+		  return this; 
+		}
+		
+		public function after(secs:Number) : Should {
+		  async=true;
+		  timeout=secs*1000;
+		  timer=new Timer(timeout, 1);
+		  timer.addEventListener(TimerEvent.TIMER, aftertimeoutReached);
+		  return this;
+		}
+		
+		private function aftertimeoutReached(e:*=null) : void {
+		  timer.stop();
+		  timer.removeEventListener(TimerEvent.TIMER, timeoutReached);
+		  async=false;
+		  run();
+		}
+		
+		private function reset() : void {
+		  if(timer!=null) {
+		    timer.stop();
+		    timer.removeEventListener(TimerEvent.TIMER, timeoutReached);
+		    timer.removeEventListener(TimerEvent.TIMER, aftertimeoutReached);
+		  }
+		  if(object!=null && this.event!=null) object.removeEventListener(this.event, eventReceived);
+		  if(this.eventObject!=null && this.event!=null) this.eventObject.removeEventListener(this.event, eventReceived);
+		}
 
 		// == null
 		// should.be.nil
-		public function get nil () :Boolean
-		{
-			return eval((this.value == null), 'be nil');
+		
+		private function getNil() : Should {
+		  return eval((this.value == null), 'be nil');
 		}
+		
+		public function get nil () :Should
+		{
+		  matcher=getNil;
+		  noValue=true;
+		  return this;
+		}
+
+    public function get specify() : Function { 
+      return _specify; 
+    }
+    
+    public function set specify(value:Function) : void { 
+      _specify = value; 
+    }
+
+    public function set timeout(value:Number) : void { 
+      _timeout = value; 
+    }
+    
+    public function get timeout() : Number { 
+      return _timeout; 
+    }
 
 		// !
 		// should.not.be
@@ -45,56 +156,128 @@ package as3spec
 			return this;
 		}
 
+    public function set story(value:String) :void {
+      _story = value;
+    }
+    
+    public function get story() : String {
+      return _story;
+    }
+
+    public function set value(value:*) :void {
+      _value=value;
+    }
+    
+    public function get value() :* {
+      if(object!=null && property!=null) return object[property];
+      return _value;
+    }
+    
+    public function set property(property:*) : void { 
+      _property = property; 
+    }
+    
+    public function get property() : * { 
+      return _property; 
+    }
+    
+    public function set object(value:*) : void {
+      _object = value; 
+    }
+    
+    public function get object() : * { 
+      return _object; 
+    }
 
 		// >>> PUBLIC METHODS
 		// == 123
 		// should.equal(123)
-		public function equal (value:*) :Boolean
+		public function equal (value:*) :Should
 		{
-			return eval((this.value == value), 'equal', value);
+		  setMatcherAndExcpectedValue(_equal, value);
+		  return this;
+		}
+		
+		public function equal_to (value:*) :Should
+		{
+		  return equal(value);
 		}
 
+    private function _equal(value:*) : void {
+      eval((this.value == value), 'equal', value);
+    }
+    
     // be more than
     // should be.more_than(value:*)
-    public function more_than(value:*) :Boolean
+    public function more_than(value:*) :Should
     {
-      return eval((this.value > value), 'more than', value);
+      setMatcherAndExcpectedValue(_more_than, value);
+      return this;
+    }
+    
+    private function _more_than(value:*) : void {
+      eval((this.value > value), 'more than', value);
     }
     
     // be less than
     // should be.less_than(value:*)
-    public function less_than(value:*) :Boolean
+    public function less_than(value:*) :Should
     {
-      return eval((this.value < value), 'less than', value);
+      setMatcherAndExcpectedValue(_less_than, value);
+      return this;
+    }
+    
+    private function _less_than(value:*) : void {
+      eval((this.value < value), 'less than', value);
     }
 
 
 		// is Type
 		// should.be.a.kind_of(Object)
-		public function kind_of (klass:*) :Boolean
+		public function kind_of (klass:*) :Should
 		{
-			return eval((this.value is klass), 'be a kind of', klass);
+		  setMatcherAndExcpectedValue(_kind_of, klass);
+      return this;
 		}
 
+    private function _kind_of(klass:*) : void {
+      eval((this.value is klass), 'be a kind of', klass);
+    }
+
 		// should.have('property')
-		public function have (property:String) :Boolean
+		public function have (prop:String) :Should
 		{
-			return eval((this.value.hasOwnProperty(property)), 'have property:', property);
+		  setMatcherAndExcpectedValue(_have, prop);
+		  return this;
+		}
+		
+		private function _have(prop:*) : void {
+		  eval((this.value.hasOwnProperty(prop)), 'have property:', prop);
 		}
 
 		// =~
 		// should.match(/pattern/)
-		public function match (pattern:*) :Boolean
+		public function match (pattern:*) :Should
 		{
-			return eval((this.value.match(pattern) != null), 'match', pattern);
+		  setMatcherAndExcpectedValue(_match, pattern);
+		  return this;
+		}
+		
+		private function _match(pattern:*) : void {
+		  eval((this.value.match(pattern) != null), 'match', pattern);
 		}
 
 		// should.throw(error) would be nice,
 		// but throw is a reserved word:
 		// should.raise(error)
-		public function raise (error:* = null) :Boolean
+		public function raise (error:* = null) :Should
 		{
-			var raised:Boolean = false;
+		  setMatcherAndExcpectedValue(_raise, error);
+			return this;
+		}
+		
+		private function _raise(error:* = null) : void {
+		  var raised:Boolean = false;
 
 			try
 			{
@@ -119,39 +302,100 @@ package as3spec
 					raised = (exception == error);
 				}
 			}
-			return eval(raised, 'raise', error);
+			eval(raised, 'raise', error)
 		}
 
 		// ===
 		// should.be.same(ref)
-		public function same (value:*) :Boolean
+		public function same (value:*) :Should
 		{
-			return eval((this.value === value), 'be the same object as', value);
+		  setMatcherAndExcpectedValue(_same, value);
+		  return this;
+		}
+		
+		public function same_as(value:*) :Should {
+		  return same(value);
+		}
+		
+		private function _same(value:*) : void {
+		  eval((this.value === value), 'be the same object as', value)
 		}
 
 		// should.trigger('event')
-		public function trigger (event:String) :Boolean
+		public function trigger (event:String) :Should
 		{
-			return eval((this.value.hasEventListener(event)), 'trigger', event);
+		  setMatcherAndExcpectedValue(_trigger, event);
+		  return this;
+		}
+		
+		private function _trigger(event:String) : void {
+		  eval((this.value.hasEventListener(event)), 'trigger', event);
 		}
 
-
-
-		// >>> PRIVATE METHODS
-		private function eval (result:Boolean, behavior:String, expected:* = '') :Boolean
+    public function run() :Should {
+      startTimer();
+      
+      try
+			{
+				specify.apply();
+			}
+			catch (error:*)
+			{
+			  stopTimer();
+			  reset();
+			  
+			  dispatchEvent(new ResultEvent(ResultEvent.ERROR, story, time, false, error));
+			  return this;
+			}
+			
+      if(timer!=null) timer.start();
+      
+      
+      (!noValue) ?
+        matcher.apply(this, [expectedValue]) :
+        matcher.apply(this);
+      
+		  return this;
+    }
+    
+    
+		
+		private function setMatcherAndExcpectedValue(matcher:Function, value:*) : void {
+		  this.matcher=matcher;
+		  this.expectedValue=value;
+		}
+		
+		private function eval (result:Boolean, behavior:String, expected:* = '') :Should
 		{
+		  if(async) return this; //do not run immediately when asynchronous (i.e waiting for event or timeout)
+		  
 			var success:Boolean = (positive ? result : (! result));
-			if (! success)
+			if (! success || didTimeout)
 			{
 				
 				var error:Error = new Error();
 				error.message = value + ' should ';
 				error.message += (positive ? '' : 'not ');
 				error.message += behavior + ' ' + expected;
-				error.name = 'FAILED';
-				throw(error);
+				if(didTimeout) error.message += ' waited for '+timeout+' ms';
+				
 			}
-			return (positive ? result : (! result));
+			
+			stopTimer();
+			
+			var resultEvent:ResultEvent;
+			
+			if(success && !didTimeout) {
+			  resultEvent = new ResultEvent(ResultEvent.SUCCESS, story, time, success)
+			} else if(didTimeout) {
+			  resultEvent = new ResultEvent(ResultEvent.TIMEOUT, story, time, success, error);
+			} else {
+			  resultEvent = new ResultEvent(ResultEvent.FAILED, story, time, success, error);
+			}
+			
+			dispatchEvent(resultEvent);
+
+			return this;
 		}
 	}
 }

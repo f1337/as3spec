@@ -1,6 +1,6 @@
 module Sprout
   class FlashPlayerTask < Rake::Task
-			COLORS = { 'F' => 31,	'E' => 35, 'M' => 33, :ok => 32	}
+			COLORS = { 'F' => 31,	'E' => 35, 'T' => 33, :ok => 32	}
 
 			# thank you rspec for win32 support ;)
 			# http://rspec.info/
@@ -24,18 +24,18 @@ module Sprout
 				return out unless COLORIZE
 
 				requirement_color = case out
-				when /(FAILED|ERROR|MISSING)/ then $1[0..0] # SpecDox, Tap, Knock
-				when /\A([FME])\Z/ then $1 # TestUnit
+				when /(FAILED|ERROR|TIMEOUT)/ then $1[0..0] # SpecDox, Tap, Knock
+				when /\A([FTE])\Z/ then $1 # TestUnit
 				else :ok
 				end
 
-				summary_color = out.match(/0 pending/).nil? ? 'M' : :ok
+				summary_color = out.match(/0 timeouts/).nil? ? 'T' : :ok
 				# summary_color = 'E' if out.match(/0 errors/).nil?
 				# summary_color = 'F' if out.match(/0 failures/).nil?
-				summary_color = 'F' if out.match(/0 failures, 0 errors/).nil?
+				summary_color = 'F' if out.match(/0 failures, 0 errors, 0 timeouts/).nil?
 
 				out.sub(/^\[as3spec\] (- .*)?$/, 
-					colorize_string('\1', requirement_color)).sub(/\[as3spec\]\s*/, '').sub(/^.+\d+ failures, \d+ errors, \d+ pending$/, 
+					colorize_string('\1', requirement_color)).sub(/\[as3spec\]\s*/, '').sub(/^.+\d+ specifications, \d+ failures, \d+ errors, \d+ timeouts$/, 
 						colorize_string('\0', summary_color))
 			end
 
