@@ -67,8 +67,23 @@ package as3spec
 		
 		
 		public var it:Function = specify;
-		public function specify (story:String, block:Function=null) :Spec {
+		public function specify (... args) :Spec {
 		  _specifications++;
+		  
+		  var story:String;
+		  var block:Function;
+		  var blockArgs:Array;
+		  
+		  if(!(args[0] is String))
+		    throw new Error('must provide a story as the first argument to specify/it method');
+		  
+		  story=args[0];
+		  
+		  if(args[1] is Function)
+		    block=args[1];
+		  
+		  if(args.length>2)
+		    blockArgs=args.slice(2);
 		  
 		  should=new Should();
 		  should.story=story;
@@ -76,8 +91,12 @@ package as3spec
 		  should.specify = (block==null) ? 
 		    function() : void{} :
 		    block;
+		    
+		  if(blockArgs!=null && (block is Function))
+		    should.params = blockArgs;
 		  
-		  if(timeout>-1) should.timeout = timeout;
+		  if(timeout>-1)
+		    should.timeout = timeout;
 		  
 		  return this;
 		}

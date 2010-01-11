@@ -134,6 +134,26 @@ package
 		      .so(123)
             .when.receiving(TimerEvent.TIMER).from(myTimer3)
             .should.be.equal_to(123);
+        
+        
+        var arbitraryArg:String = 'dont be this';
+        
+        it('takes arbitrary arguments to specify block and can take a method to evaluate(run) in require', function(arbArg:String) :void
+		    {
+		      arbitraryArg=arbArg;
+		    },
+		    'please be this')    
+		      .so(function() : Boolean {
+		        return (arbitraryArg == 'please be this');
+		      })
+            .should.give(true);
+            
+        it('should generate an error if block passed to require throws')    
+		      .so(function() : Boolean {
+		        var someObject:*;
+		        return someObject.nonExistant();
+		      })
+            .should.give(true);
 
 				it ('catches an error', function () :void
 				{
