@@ -16,16 +16,11 @@ package as3spec
 	  public var printXML:Boolean = false;
 	  public var printTrace:Boolean = true;
 	  
-	  private var outputXML: XML = <XMLResultPrinter></XMLResultPrinter>;
 	  private var suiteXML: XML = <testsuite></testsuite>;
 	  private var testCase: XML;
 	  
 	  private var desc : String;
 	  
-	  public function Printer() : void {
-	   outputXML.appendChild(suiteXML);
-	  }
-		
 		public function description(s : String) : void {
 		  desc = s;
 		  puts('');
@@ -45,8 +40,8 @@ package as3spec
 		private function specificationXML(s : String, type : String, time : Number, error:Error = null) : void {
 		  if(!printXML) return;
 		  
-		  testCase = <testCase></testCase>;
-		  testCase.@className = clean(desc);
+		  testCase = <testcase></testcase>;
+		  testCase.@classname = clean(desc);
 		  testCase.@name = clean(s);
 		  testCase.@time = time/1000;
 		  
@@ -92,7 +87,7 @@ package as3spec
 		  
 		  summaryXML(specifications, failures, errors, successes, timeouts, time);
 		  
-		  if(printXML) trace(outputXML.toXMLString());
+		  putsXML();
 		  
 		}
 		
@@ -105,6 +100,18 @@ package as3spec
 		  suiteXML.@timeouts=timeouts;
 		  suiteXML.@tests=specifications;
 		  
+		}
+		
+		private function putsXML() : void {
+		  if(printXML) {
+		    //fix this later
+		    suiteXML.@name = 'AllSpecs';
+		    trace('<XMLResultPrinter>');
+		    trace('<?xml version="1.0" encoding="UTF-8"?>');
+		    XML.prettyIndent = 0;
+		    trace(suiteXML.toXMLString());
+		    trace('</XMLResultPrinter>');
+		  }
 		}
 		
 		private function puts(s : String) : void {
