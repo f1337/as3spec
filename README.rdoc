@@ -1,4 +1,4 @@
-==== Some things in this document is no longer true, please look for the *new* syntax
+==== Some things in this document is are longer true, please look for the *new* syntax
 
 = AS3Spec 
 
@@ -222,7 +222,7 @@ There is a well written answer to that question at http://www.projectsprouts.org
   }
   
   
-  == Now we can BDD in AS3 (THIS SYNTAX DOES NOT WORK ANYMORE, SEE ABOVE!)
+== Now we can BDD in AS3 (THIS SYNTAX DOES NOT WORK ANYMORE, SEE ABOVE!)
   
     package
     {
