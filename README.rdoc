@@ -1,5 +1,9 @@
 ==== Some things in this document is are longer true, please look for the *new* syntax
 
+If running the specs for AS3Specs itself, you should get:
+
+1 failures, 2 errors, 1 timeouts in the summary - this is currently correct.
+
 = AS3Spec 
 
 AS3Spec is a tiny BDD framework for AS3, inspired by Bacon and RSpec. Built upon sprout project-generation tool for ActionScript/Flash/Flex/AIR.
