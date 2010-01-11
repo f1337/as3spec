@@ -103,15 +103,17 @@ package as3spec
 		
 		private function next() : void {
 		  
-		  if(contexts.length<=0 && currentContext.specs.length<=0) {
-		    cleanup();
-		    return;
-	    }
+		  if(contexts.length<=0 && currentContext.specs.length<=0) return cleanup();
 		  
 		  if(currentContext==null || currentContext.specs.length==0) {
 		    currentContext=contexts.shift();
 		    Printer.printer.description(currentContext.description);
 	    }
+	    
+	    if(currentContext.specs.length==0) {
+	      Printer.printer.puts(' - empty context [EMPTY]');
+	      return next();
+		  }
 		  
 		  should = currentContext.specs.shift() as Should;
 		  
