@@ -234,8 +234,9 @@ package as3spec
 			{
 				rval = this.value();
 			}
-			catch (error:*)
+			catch (e:*)
 			{
+			  error = e;
 			  raised = true;
 			}
 			
