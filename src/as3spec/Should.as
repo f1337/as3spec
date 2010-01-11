@@ -24,6 +24,7 @@ package as3spec
 		private var _story:String;
 		private var _timeout:Number = 10000;
 		private var _specify:Function;
+		private var _params:Array;
 
 
 		// should.be
@@ -125,6 +126,16 @@ package as3spec
 		  noValue=true;
 		  return this;
 		}
+		
+		public function set params(value:Array):void
+		{
+		  _params = value;
+		}
+		
+		public function get params():Array
+		{
+		  return _params;
+		}
 
     public function get specify() : Function { 
       return _specify; 
@@ -205,6 +216,38 @@ package as3spec
 
     private function _equal(value:*) : void {
       eval((this.value == value), 'equal', value);
+    }
+    
+    public function give(value:*):Should
+    {
+      setMatcherAndExcpectedValue(_give, value);
+      return this;
+    }
+    
+    private function _give(value:*):void
+    {
+      var raised:Boolean = false;
+      var rval:*;
+      var error:*;
+      
+      try
+			{
+				rval = this.value();
+			}
+			catch (error:*)
+			{
+			  raised = true;
+			}
+			
+			if(raised) {
+			  stopTimer();
+			  reset();
+
+			  dispatchEvent(new ResultEvent(ResultEvent.ERROR, story, time, false, error));
+			} else {
+			  eval((rval == expectedValue), 'give', value);
+			}
+			
     }
     
     // be more than
@@ -302,7 +345,7 @@ package as3spec
 					raised = (exception == error);
 				}
 			}
-			eval(raised, 'raise', error)
+			eval(raised, 'raise', error);
 		}
 
 		// ===
@@ -337,7 +380,9 @@ package as3spec
       
       try
 			{
-				specify.apply();
+			  (params!=null) ?
+				  specify.apply(NaN, params) :
+				  specify.apply();
 			}
 			catch (error:*)
 			{
