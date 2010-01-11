@@ -114,7 +114,7 @@ package as3spec
 		  }
 		}
 		
-		private function puts(s : String) : void {
+		public function puts(s : String) : void {
 		  if(printTrace) trace('[as3spec] ' + s);
 		}
 		
