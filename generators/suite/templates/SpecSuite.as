@@ -7,14 +7,14 @@ package
 	 * modifications will be lost!
 	 */
 
-	import as3spec.*;
-	import AS3Spec;
+	import as3spec.*;<% test_case_classes.each do |test_case| %>
+	import <%= test_case %>;<% end %>
 
 	public class SpecSuite extends Suite
 	{
 		public function SpecSuite ()
-		{
-			add(AS3Spec);
+		{<% test_case_classes.each do |test_case| %>
+			add(<%= test_case %>);<% end %>
 		}
 	}
 }
