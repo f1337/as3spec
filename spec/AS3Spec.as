@@ -52,7 +52,10 @@ package
         it ('provides should.not.match').so('hello').should.not.match(/egg/);
         it ('provides should.be.a.kind_of').so(arr).should.be.a.kind_of(Array);
         it ('provides should.not.be.a.kind_of').so(arr).should.not.be.a.kind_of(Boolean);
-        
+		it ('provides should.be.between').so(5).should.be.between(2, 7);
+		it ('provides should.not.be.between').so(15).should.not.be.between(2, 7);
+		it ('provides should.be.between').so(15).should.be.between(2, 7);
+
         it ('provides should.raise(message)')
           .so(function() :void
           {

@@ -11,7 +11,7 @@ package as3spec
 		private var eventObject:* = null;
 		private var async:Boolean = false;
 		private var noValue:Boolean = false;
-		private var expectedValue:*;
+		private var expectedValues:Array;
 		private var event:String;
 		private var matcher:Function;
 		private var timer:Timer;
@@ -113,20 +113,6 @@ package as3spec
 		  if(this.eventObject!=null && this.event!=null) this.eventObject.removeEventListener(this.event, eventReceived);
 		}
 
-		// == null
-		// should.be.nil
-		
-		private function getNil() : Should {
-		  return eval((this.value == null), 'be nil');
-		}
-		
-		public function get nil () :Should
-		{
-		  matcher=getNil;
-		  noValue=true;
-		  return this;
-		}
-		
 		public function set params(value:Array):void
 		{
 		  _params = value;
@@ -152,6 +138,20 @@ package as3spec
     public function get timeout() : Number { 
       return _timeout; 
     }
+
+    // == null
+		// should.be.nil
+		
+		private function getNil() : Should {
+		  return eval((this.value == null), 'be nil');
+		}
+		
+		public function get nil () :Should
+		{
+		  matcher=getNil;
+		  noValue=true;
+		  return this;
+		}
 
 		// !
 		// should.not.be
@@ -200,12 +200,11 @@ package as3spec
       return _object; 
     }
 
-		// >>> PUBLIC METHODS
 		// == 123
 		// should.equal(123)
 		public function equal (value:*) :Should
 		{
-		  setMatcherAndExcpectedValue(_equal, value);
+		  setMatcherAndExcpectedValues(_equal, value);
 		  return this;
 		}
 		
@@ -220,7 +219,7 @@ package as3spec
     
     public function give(value:*):Should
     {
-      setMatcherAndExcpectedValue(_give, value);
+      setMatcherAndExcpectedValues(_give, value);
       return this;
     }
     
@@ -241,38 +240,51 @@ package as3spec
 			}
 			
 			if(raised) {
-			  stopTimer();
-			  reset();
-
-			  dispatchEvent(new ResultEvent(ResultEvent.ERROR, story, time, false, error));
+        exitAndReportError(error);
 			} else {
-			  eval((rval == expectedValue), 'give', value);
+			  eval((rval == expectedValues[0]), 'give', value);
 			}
 			
     }
+    
+    // be between
+    // should be.between(value1:*, value2:*)
+    public function between(value1:*, value2:*) : Should {
+      setMatcherAndExcpectedValues(_between, value1, value2);
+      return this;
+    }
+    
+    private function _between(value1:*, value2:*) : void {
+      if(value1<value2) {
+        eval((this.value > value1 && this.value < value2), 'be between', value1 + ' and ' + value2);
+      } else {
+        eval((this.value < value1 && this.value > value2), 'be between', value1 + ' and ' + value2);
+      }
+    }
+    
     
     // be more than
     // should be.more_than(value:*)
     public function more_than(value:*) :Should
     {
-      setMatcherAndExcpectedValue(_more_than, value);
+      setMatcherAndExcpectedValues(_more_than, value);
       return this;
     }
     
     private function _more_than(value:*) : void {
-      eval((this.value > value), 'more than', value);
+      eval((this.value > value), 'be more than', value);
     }
     
     // be less than
     // should be.less_than(value:*)
     public function less_than(value:*) :Should
     {
-      setMatcherAndExcpectedValue(_less_than, value);
+      setMatcherAndExcpectedValues(_less_than, value);
       return this;
     }
     
     private function _less_than(value:*) : void {
-      eval((this.value < value), 'less than', value);
+      eval((this.value < value), 'be less than', value);
     }
 
 
@@ -280,7 +292,7 @@ package as3spec
 		// should.be.a.kind_of(Object)
 		public function kind_of (klass:*) :Should
 		{
-		  setMatcherAndExcpectedValue(_kind_of, klass);
+		  setMatcherAndExcpectedValues(_kind_of, klass);
       return this;
 		}
 
@@ -291,7 +303,7 @@ package as3spec
 		// should.have('property')
 		public function have (prop:String) :Should
 		{
-		  setMatcherAndExcpectedValue(_have, prop);
+		  setMatcherAndExcpectedValues(_have, prop);
 		  return this;
 		}
 		
@@ -303,7 +315,7 @@ package as3spec
 		// should.match(/pattern/)
 		public function match (pattern:*) :Should
 		{
-		  setMatcherAndExcpectedValue(_match, pattern);
+		  setMatcherAndExcpectedValues(_match, pattern);
 		  return this;
 		}
 		
@@ -316,7 +328,7 @@ package as3spec
 		// should.raise(error)
 		public function raise (error:* = null) :Should
 		{
-		  setMatcherAndExcpectedValue(_raise, error);
+		  setMatcherAndExcpectedValues(_raise, error);
 			return this;
 		}
 		
@@ -353,7 +365,7 @@ package as3spec
 		// should.be.same(ref)
 		public function same (value:*) :Should
 		{
-		  setMatcherAndExcpectedValue(_same, value);
+		  setMatcherAndExcpectedValues(_same, value);
 		  return this;
 		}
 		
@@ -368,7 +380,7 @@ package as3spec
 		// should.trigger('event')
 		public function trigger (event:String) :Should
 		{
-		  setMatcherAndExcpectedValue(_trigger, event);
+		  setMatcherAndExcpectedValues(_trigger, event);
 		  return this;
 		}
 		
@@ -387,28 +399,35 @@ package as3spec
 			}
 			catch (error:*)
 			{
-			  stopTimer();
-			  reset();
-			  
-			  dispatchEvent(new ResultEvent(ResultEvent.ERROR, story, time, false, error));
-			  return this;
+			  return exitAndReportError(error);
 			}
 			
       if(timer!=null) timer.start();
       
       
       (!noValue) ?
-        matcher.apply(this, [expectedValue]) :
+        matcher.apply(this, expectedValues) :
         matcher.apply(this);
-      
-		  return this;
+        
+      return this;
     }
     
     
 		
-		private function setMatcherAndExcpectedValue(matcher:Function, value:*) : void {
-		  this.matcher=matcher;
-		  this.expectedValue=value;
+		private function setMatcherAndExcpectedValues(... args) : void {
+		  try {
+		    this.matcher=args.shift();
+		    this.expectedValues=args.slice(0);
+		  } catch(error:*) {
+		    exitAndReportError(error);
+		  }
+		}
+		
+		private function exitAndReportError(error:Error) : Should {
+		  stopTimer();
+		  reset();
+		  dispatchEvent(new ResultEvent(ResultEvent.ERROR, story, time, false, error));
+		  return this;
 		}
 		
 		private function eval (result:Boolean, behavior:String, expected:* = '') :Should
