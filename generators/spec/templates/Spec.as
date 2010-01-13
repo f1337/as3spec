@@ -10,14 +10,14 @@ package <%= package_name %>
 			{
 				const <%= instance_name %>:<%= class_name %> = new <%= class_name %>;
 
-				it ('should be a <%= class_name %>', function () :void
-				{
-					so(<%= instance_name %>).should.be.a.kind_of(<%= class_name %>);
-				});
+				it ('should be a <%= class_name %>')
+					.so(<%= instance_name %>).should.be.a.kind_of(<%= class_name %>);
 
-				it ('should contain real code', function () :void
+/*				it ('should contain real code', function() :void
 				{
 				});
+*/
+				it ('should contain real code');
 			});
 		}
 	}
