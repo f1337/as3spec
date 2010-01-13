@@ -9,7 +9,6 @@ package
 
 	import as3spec.*;
 	import AS3Spec;
-	import world.HelloSpec;
 
 	public class SpecSuiteXML extends Suite
 	{
@@ -18,7 +17,6 @@ package
 			ci_output = true;
 			trace_output = false;
 			add(AS3Spec);
-			add(world.HelloSpec);
 		}
 	}
 }

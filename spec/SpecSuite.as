@@ -9,14 +9,12 @@ package
 
 	import as3spec.*;
 	import AS3Spec;
-	import world.HelloSpec;
 
 	public class SpecSuite extends Suite
 	{
 		public function SpecSuite ()
 		{
 			add(AS3Spec);
-			add(world.HelloSpec);
 		}
 	}
 }
