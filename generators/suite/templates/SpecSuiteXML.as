@@ -7,18 +7,16 @@ package
 	 * modifications will be lost!
 	 */
 
-	import as3spec.*;
-	import AS3Spec;
-	import world.HelloSpec;
+	import as3spec.*;<% test_case_classes.each do |test_case| %>
+	import <%= test_case %>;<% end %>
 
 	public class SpecSuiteXML extends Suite
 	{
 		public function SpecSuiteXML ()
 		{
 			ci_output = true;
-			trace_output = false;
-			add(AS3Spec);
-			add(world.HelloSpec);
+			trace_output = false;<% test_case_classes.each do |test_case| %>
+			add(<%= test_case %>);<% end %>
 		}
 	}
 }

@@ -5,7 +5,7 @@ package
   import flash.events.*;
 
 
-	public class AS3Specs extends Spec
+	public class AS3Spec extends Spec
 	{
 	  private var nothing:String;
 	  private var arr:Array;

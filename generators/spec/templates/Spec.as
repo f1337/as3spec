@@ -4,7 +4,7 @@ package <%= package_name %>
 
 	public class <%= test_case_name  %> extends Spec
 	{
-		public function run () :void
+		override public function run () :void
 		{
 			describe ('a new <%= class_name %>', function () :void
 			{
@@ -13,11 +13,8 @@ package <%= package_name %>
 				it ('should be a <%= class_name %>')
 					.so(<%= instance_name %>).should.be.a.kind_of(<%= class_name %>);
 
-/*				it ('should contain real code', function() :void
-				{
-				});
-*/
-				it ('should contain real code');
+				// TODO: re-introduce "MISSING" for assertion stubs:
+				// it ('should contain real code');
 			});
 		}
 	}
