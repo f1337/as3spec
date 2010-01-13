@@ -256,9 +256,9 @@ package as3spec
     
     private function _between(value1:*, value2:*) : void {
       if(value1<value2) {
-        eval((this.value > value1 && this.value < value2), 'be between', value1 + ' and ' + value2);
+        eval((this.value >= value1 && this.value <= value2), 'be between', value1 + ' and ' + value2);
       } else {
-        eval((this.value < value1 && this.value > value2), 'be between', value1 + ' and ' + value2);
+        eval((this.value <= value1 && this.value >= value2), 'be between', value1 + ' and ' + value2);
       }
     }
     
