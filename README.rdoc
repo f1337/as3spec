@@ -2,7 +2,7 @@
 
 If running the specs for AS3Spec itself, you should get:
 
-1 failures, 2 errors, 1 timeouts in the summary - this is currently correct.
+"33 specifications, 1 failures, 2 errors, 1 timeouts, 1 missing" in the summary - this is currently correct.
 
 = AS3Spec 
 

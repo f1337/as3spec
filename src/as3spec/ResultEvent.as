@@ -9,6 +9,7 @@ package as3spec
     public static const FAILED      : String  = "FAILED";
     public static const ERROR       : String  = "ERROR";
     public static const TIMEOUT     : String  = "TIMEOUT";
+    public static const MISSING     : String  = "MISSING";
     
     public var success: Boolean;
     public var error: Error;

@@ -25,6 +25,7 @@ package as3spec
 		private var _timeout:Number = 10000;
 		private var _specify:Function;
 		private var _params:Array;
+		private var _missing:Boolean=true;
 
 
 		// should.be
@@ -113,6 +114,14 @@ package as3spec
 		  if(this.eventObject!=null && this.event!=null) this.eventObject.removeEventListener(this.event, eventReceived);
 		}
 
+    public function set missing(value:Boolean) : void { 
+      _missing = value; 
+    }
+    
+    public function get missing() : Boolean { 
+      return _missing; 
+    }
+
 		public function set params(value:Array):void
 		{
 		  _params = value;
@@ -148,8 +157,8 @@ package as3spec
 		
 		public function get nil () :Should
 		{
-		  matcher=getNil;
 		  noValue=true;
+		  setMatcherAndExcpectedValues(getNil, null);
 		  return this;
 		}
 
@@ -405,6 +414,14 @@ package as3spec
       if(timer!=null) timer.start();
       
       
+      if(missing) {
+        stopTimer();
+        reset();
+        var error:Error = new Error('Missing spec');
+        dispatchEvent(new ResultEvent(ResultEvent.MISSING, story, time, false, error))
+        return this;
+      }
+      
       (!noValue) ?
         matcher.apply(this, expectedValues) :
         matcher.apply(this);
@@ -418,6 +435,7 @@ package as3spec
 		  try {
 		    this.matcher=args.shift();
 		    this.expectedValues=args.slice(0);
+		    this.missing=false;
 		  } catch(error:*) {
 		    exitAndReportError(error);
 		  }

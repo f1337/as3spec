@@ -66,6 +66,7 @@ package as3spec
 		  var successes:int=0;
 		  var errors:int=0;
 		  var timeouts:int=0;
+		  var missing:int=0;
 		  
 		  for each (var spec:Spec in specArray) {
 		    specifications+=spec.specifications;
@@ -73,6 +74,7 @@ package as3spec
 		    successes+=spec.successes;
 		    errors+=spec.errors;
 		    timeouts+=spec.timeouts;
+		    missing+=spec.missing;
 		  }
 		  
 		  puts('');
@@ -82,6 +84,7 @@ package as3spec
 				failures + ' failures, ' + 
 				errors + ' errors, ' +
 				timeouts + ' timeouts, ' +
+				missing + ' missing, ' +
 				'time: ' + time/1000 + ' seconds'
 		  );
 		  

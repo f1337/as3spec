@@ -18,6 +18,7 @@ package as3spec
     private var _failures               : int = 0;
     private var _errors                 : int = 0;
     private var _timeouts               : int = 0;
+    private var _missing                : int = 0;
     
     private var _timeout                : Number = -1;
     
@@ -36,6 +37,10 @@ package as3spec
     
     public function get errors() : int { 
       return _errors; 
+    }
+    
+    public function get missing() : int { 
+      return _missing; 
     }
     
     public function get timeouts() : int { 
@@ -97,6 +102,8 @@ package as3spec
 		  
 		  if(timeout>-1)
 		    should.timeout = timeout;
+		    
+		  currentContext.specs.push(should);
 		  
 		  return this;
 		}
@@ -116,7 +123,7 @@ package as3spec
 		    should.value=args[0];
 		  
 		  }
-		  currentContext.specs.push(should);
+		  
 	    return should;
 		}
 		
@@ -140,6 +147,7 @@ package as3spec
 		  should.addEventListener(ResultEvent.FAILED, testFailure);
 		  should.addEventListener(ResultEvent.ERROR, testError);
 		  should.addEventListener(ResultEvent.TIMEOUT, testTimeout);
+		  should.addEventListener(ResultEvent.MISSING, testMissing);
 		  should.run();
 		}
 		
@@ -170,6 +178,13 @@ package as3spec
       Printer.printer.specification(re.story, re.type, re.time, re.error);
       next();
     }
+    
+    private function testMissing(re:ResultEvent) : void {
+      _missing++;
+      removeListeners();
+      Printer.printer.specification(re.story, re.type, re.time, re.error);
+      next();
+    }
 
     private function removeListeners() : void {
       if(should==null) return;
@@ -177,6 +192,7 @@ package as3spec
       should.removeEventListener(ResultEvent.FAILED, testFailure);
       should.removeEventListener(ResultEvent.ERROR, testError);
       should.removeEventListener(ResultEvent.TIMEOUT, testTimeout);
+      should.removeEventListener(ResultEvent.MISSING, testMissing);
     }
     
     protected function cleanup() : void {

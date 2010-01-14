@@ -13,8 +13,6 @@ package <%= package_name %>
 				it ('should be a <%= class_name %>')
 					.so(<%= instance_name %>).should.be.a.kind_of(<%= class_name %>);
 
-				// TODO: re-introduce "MISSING" for assertion stubs:
-				// it ('should contain real code');
 			});
 		}
 	}

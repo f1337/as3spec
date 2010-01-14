@@ -1,6 +1,6 @@
 module Sprout
   class FlashPlayerTask < Rake::Task
-			COLORS = { 'F' => 31,	'E' => 35, 'T' => 33, :ok => 32	}
+			COLORS = { 'F' => 31,	'E' => 35, 'T' => 33, 'M' => 37, :ok => 32	}
 
 			# thank you rspec for win32 support ;)
 			# http://rspec.info/
@@ -24,8 +24,8 @@ module Sprout
 				return out unless COLORIZE
 
 				requirement_color = case out
-				when /(FAILED|ERROR|TIMEOUT)/ then $1[0..0] # SpecDox, Tap, Knock
-				when /\A([FTE])\Z/ then $1 # TestUnit
+				when /(FAILED|ERROR|TIMEOUT|MISSING)/ then $1[0..0] # SpecDox, Tap, Knock
+				when /\A([FTEM])\Z/ then $1 # TestUnit
 				else :ok
 				end
 

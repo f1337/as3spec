@@ -137,7 +137,8 @@ package
 		      .so(123)
             .when.receiving(TimerEvent.TIMER).from(myTimer3)
             .should.be.equal_to(123);
-        
+            
+        it('catches a missing spec');
         
         var arbitraryArg:String = 'dont be this';
         
